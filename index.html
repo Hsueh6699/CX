@@ -79,11 +79,64 @@ body {
     text-align: center;
     /* 增加触摸区域 */
     touch-action: manipulation;
+    overflow: hidden; /* 确保闪光效果不溢出 */
+}
+
+.side-button::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 204, 0, 0.8) 0%, transparent 60%);
+    opacity: 0;
+    z-index: -1;
+    transform: scale(0);
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.side-button.clicked::before {
+    opacity: 1;
+    transform: scale(1);
+    animation: buttonGlow 0.5s ease;
+}
+
+@keyframes buttonGlow {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.5);
+    }
 }
 
 .side-button:hover {
     background: transparent;
     transform: translateY(-50%) scale(1.05);
+}
+
+.side-button.clicked {
+    transform: scale(0.95);
+    animation: buttonClick 0.5s ease;
+}
+
+@keyframes buttonClick {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.8);
+    }
+    50% {
+        box-shadow: 0 0 30px 10px rgba(255, 204, 0, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 204, 0, 0);
+    }
 }
 
 /* LOGO图片样式 */
@@ -96,6 +149,7 @@ body {
     position: relative;
     animation: pulse 2s infinite;
     border: none;
+    transition: all 0.3s ease;
 }
 
 /* LOGO脉冲动画 */
@@ -108,6 +162,25 @@ body {
     }
     100% {
         filter: drop-shadow(0 0 0px #ffcc00);
+    }
+}
+
+.side-button.clicked .logo-image {
+    animation: logoClick 0.5s ease;
+}
+
+@keyframes logoClick {
+    0% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 5px #ffcc00) brightness(1);
+    }
+    50% {
+        transform: scale(1.1);
+        filter: drop-shadow(0 0 20px #ffcc00) brightness(1.5);
+    }
+    100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 5px #ffcc00) brightness(1);
     }
 }
 
@@ -410,23 +483,27 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.85);
     z-index: 2000;
     display: flex;
     justify-content: center;
     align-items: center;
     animation: fadeIn 0.3s ease;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
 }
 
 .message-content {
     background-color: #1a1a1a;
     border: 2px solid #ffcc00;
-    border-radius: 10px;
+    border-radius: 15px;
     padding: 20px;
     width: 90%;
     max-width: 350px;
     text-align: center;
-    box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
+    box-shadow: 0 0 30px rgba(255, 204, 0, 0.4);
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .message-content p {
@@ -447,17 +524,20 @@ body {
     background: linear-gradient(135deg, #ffcc00, #ff9900);
     color: #000;
     border: none;
-    padding: 8px 20px;
-    border-radius: 20px;
+    padding: 10px 25px;
+    border-radius: 25px;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s ease;
-    margin-top: 10px;
+    margin-top: 15px;
+    font-size: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .message-content button:hover {
     transform: scale(1.05);
     background: linear-gradient(135deg, #ff9900, #ffcc00);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
 }
 
 @keyframes fadeIn {
@@ -599,7 +679,10 @@ body {
             sideButton.classList.add('clicked');
             setTimeout(() => {
                 sideButton.classList.remove('clicked');
-            }, 300);
+            }, 500);
+
+            // 添加点击音效
+            playClickSound();
         });
         
         // 点击按钮也可以切换菜单显示状态
@@ -615,7 +698,10 @@ body {
             sideButton.classList.add('clicked');
             setTimeout(() => {
                 sideButton.classList.remove('clicked');
-            }, 300);
+            }, 500);
+
+            // 添加点击音效
+            playClickSound();
         });
         
         // 点击页面其他区域关闭菜单（移动端优化）
@@ -706,7 +792,7 @@ body {
             const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
             
             if (isIOS) {
-                // iOS设备专用指南，带动画箭头指向Safari底部分享按钮
+                // iOS设备专用指南，带真实截图指导
                 showInstallMessage(`
                     <div style="text-align: center;">
                         <div style="margin: 0 0 15px;">
@@ -719,74 +805,29 @@ body {
                         </div>
                         
                         <div style="position: relative; margin: 25px auto; width: 280px; border: 1px solid #333; border-radius: 15px; padding: 15px; background: rgba(0,0,0,0.3);">
-                            <p style="font-weight: bold; margin-bottom: 15px;">请按照以下步骤操作：</p>
+                            <p style="font-weight: bold; margin-bottom: 15px; text-align: center;">请按照以下步骤操作：</p>
                             
                             <div style="text-align: left; margin-bottom: 10px; display: flex; align-items: center;">
                                 <span style="background: #ffcc00; color: black; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-weight: bold;">1</span>
-                                <span>点击下方浏览器<strong style="color: #ffcc00;">分享按钮</strong> <span style="font-size: 18px;">□↑</span></span>
+                                <span>点击浏览器底部<strong style="color: #ffcc00;">分享按钮</strong> <span style="font-size: 18px;">□↑</span></span>
                             </div>
                             
                             <div style="text-align: left; margin-bottom: 10px; display: flex; align-items: center;">
                                 <span style="background: #ffcc00; color: black; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-weight: bold;">2</span>
-                                <span><strong style="color: #ffcc00;">向上滑动</strong>菜单，找到<strong style="color: #ffcc00;">添加到主屏幕</strong>选项</span>
+                                <span>在弹出菜单中点击<strong style="color: #ffcc00;">添加到主屏幕</strong>选项</span>
                             </div>
                             
                             <div style="text-align: left; margin-bottom: 5px; display: flex; align-items: center;">
                                 <span style="background: #ffcc00; color: black; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-weight: bold;">3</span>
-                                <span>点击<strong style="color: #ffcc00;">添加</strong>完成安装</span>
+                                <span>点击右上角<strong style="color: #ffcc00;">添加</strong>按钮完成</span>
                             </div>
                         </div>
                         
-                        <div style="position: relative; margin-top: 30px;">
-                            <div style="position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%);">
-                                <div style="width: 40px; height: 40px; border: 2px solid #ffcc00; border-radius: 50%; display: flex; justify-content: center; align-items: center; animation: pulse 1.5s infinite;">
-                                    <div style="width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 12px solid #ffcc00; transform: translateY(5px);"></div>
-                                </div>
-                            </div>
-                            <p style="margin-top: 5px; color: #ffcc00; font-weight: bold;">请使用系统自带分享按钮</p>
-                        </div>
-                        
-                        <div style="margin-top: 60px; text-align: center;">
-                            <p style="color: #ffcc00; font-size: 14px; margin-bottom: 10px;">注意：点此按钮是普通分享，请点击<strong>浏览器底部</strong>的分享图标</p>
-                            <div style="width: 260px; margin: 0 auto; background-color: #333; padding: 15px; border-radius: 10px; border: 1px solid #444;">
-                                <div style="position: relative; text-align: center; margin-bottom: 10px; padding-bottom: 25px;">
-                                    <div style="width: 100%; height: 30px; background-color: #222; border-radius: 5px 5px 0 0; display: flex; justify-content: center; align-items: center;">
-                                        <div style="width: 40%; height: 5px; background-color: #444; border-radius: 5px;"></div>
-                                    </div>
-                                    <div style="width: 100%; height: 150px; background-color: #111; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 12px;">
-                                        网页内容区域
-                                    </div>
-                                    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 35px; background-color: #222; border-radius: 0 0 5px 5px; display: flex; justify-content: space-around; align-items: center;">
-                                        <div style="width: 20px; height: 20px; background-color: #444; border-radius: 5px;"></div>
-                                        <div style="width: 20px; height: 20px; background-color: #444; border-radius: 5px;"></div>
-                                        <div style="width: 20px; height: 20px; background-color: #444; border-radius: 5px;"></div>
-                                        <div style="width: 30px; height: 20px; background-color: #ffcc00; border-radius: 5px; display: flex; justify-content: center; align-items: center; position: relative; animation: shareGlow 2s infinite alternate;">
-                                            <div style="width: 10px; height: 10px; border: 2px solid #111; border-top: none; border-right: none;"></div>
-                                            <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%);">
-                                                <div style="width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 8px solid #ffcc00;"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p style="color: #fff; font-size: 12px; text-align: center;">
-                                    <span style="display: inline-block; padding: 3px 8px; background-color: #ffcc00; color: #000; border-radius: 10px; margin-top: 5px;">
-                                        ← 点击此分享按钮
-                                    </span>
-                                </p>
-                            </div>
+                        <div style="margin: 30px auto 0; text-align: center;">
+                            <p style="color: #ffcc00; font-size: 14px; margin-bottom: 15px; font-weight: bold;">👇 iPhone操作图解 👇</p>
+                            <img src="./images/ios.jpg" style="width: 100%; max-width: 300px; border-radius: 10px; border: 1px solid #444; margin: 0 auto; box-shadow: 0 0 15px rgba(255, 204, 0, 0.3);" alt="iOS添加到主屏幕操作指南">
                         </div>
                     </div>
-                    <style>
-                        @keyframes pulse {
-                            0% { transform: translateY(0) scale(1); }
-                            50% { transform: translateY(10px) scale(1.1); }
-                            100% { transform: translateY(0) scale(1); }
-                        }
-                        @keyframes shareGlow {
-                            0% { box-shadow: 0 0 0px #ffcc00; }
-                            100% { box-shadow: 0 0 10px #ffcc00; }
-                        }
-                    </style>
                 `);
             } else if (isAndroid && isChrome) {
                 // 安卓 Chrome 专用指南
@@ -890,13 +931,43 @@ body {
             // iOS设备不自动关闭提示，为用户提供充足时间
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
             if (!isIOS) {
-                // 非iOS设备10秒后自动关闭
+                // 非iOS设备15秒后自动关闭
                 setTimeout(() => {
                     if (document.body.contains(messageBox)) {
                         messageBox.remove();
                     }
-                }, 12000);
+                }, 15000);
             }
+        }
+
+        // 点击音效函数
+        function playClickSound() {
+            // 创建音频上下文
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return; // 不支持的浏览器直接返回
+            
+            const audioCtx = new AudioContext();
+            
+            // 创建振荡器
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            // 设置声音特性
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // A5音
+            oscillator.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.1); // 滑落到A4音
+            
+            // 设置音量包络
+            gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.02);
+            gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.2);
+            
+            // 连接并播放
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.2);
         }
     </script>
     
