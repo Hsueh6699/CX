@@ -189,13 +189,19 @@ body {
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 0 30px rgba(255, 204, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image-container:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 40px rgba(255, 204, 0, 0.3);
 }
 
 .main-image {
     width: 100%;
     height: auto;
     display: block;
-    transition: transform 0.5s ease;
+    transition: transform 0.3s ease;
 }
 
 /* 加载动画样式 */
@@ -509,182 +515,6 @@ body {
             addToHomeBtn.style.display = 'block';
         });
         
-        // 添加到主屏幕的函数
-        function addToHomeScreen() {
-            if (deferredPrompt) {
-                // 显示安装提示
-                deferredPrompt.prompt();
-                
-                // 等待用户响应提示
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('用户接受了安装提示');
-                        // 显示成功提示
-                        showInstallMessage('添加成功！请在手机桌面查看彩旭国际图标<br>点击图标即可访问官网');
-                    } else {
-                        console.log('用户拒绝了安装提示');
-                        // 用户拒绝了自动安装，显示完整的安装指南
-                        showCompleteInstallGuide();
-                    }
-                    // 不再需要 prompt()，清除它
-                    deferredPrompt = null;
-                });
-            } else {
-                // 如果不支持自动安装，显示完整的安装指南
-                showCompleteInstallGuide();
-            }
-        }
-        
-        // 显示完整的安装指南（同时包含安卓和iOS）
-        function showCompleteInstallGuide() {
-            // 检测iOS设备
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            
-            if (isIOS) {
-                // iOS设备专用指南，带动画箭头指向Safari底部分享按钮
-                showInstallMessage(`
-                    <div style="text-align: center;">
-                        <div style="margin: 0 0 15px;">
-                            <p style="color: #ffcc00; font-weight: bold; font-size: 18px;">
-                                添加到iPhone主屏幕
-                            </p>
-                            <p style="margin-top: 10px; font-size: 14px;">
-                                将彩旭国际添加到主屏幕，一键访问官网
-                            </p>
-                        </div>
-                        
-                        <div style="position: relative; margin: 25px auto; width: 280px; border: 1px solid #333; border-radius: 15px; padding: 15px; background: rgba(0,0,0,0.3);">
-                            <p style="font-weight: bold; margin-bottom: 15px;">请按照以下步骤操作：</p>
-                            
-                            <div style="text-align: left; margin-bottom: 10px; display: flex; align-items: center;">
-                                <span style="background: #ffcc00; color: black; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-weight: bold;">1</span>
-                                <span>点击底部<strong style="color: #ffcc00;">分享按钮</strong></span>
-                            </div>
-                            
-                            <div style="text-align: left; margin-bottom: 10px; display: flex; align-items: center;">
-                                <span style="background: #ffcc00; color: black; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-weight: bold;">2</span>
-                                <span>滑动菜单，找到<strong style="color: #ffcc00;">添加到主屏幕</strong></span>
-                            </div>
-                            
-                            <div style="text-align: left; margin-bottom: 5px; display: flex; align-items: center;">
-                                <span style="background: #ffcc00; color: black; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-weight: bold;">3</span>
-                                <span>点击<strong style="color: #ffcc00;">添加</strong>完成</span>
-                            </div>
-                        </div>
-                        
-                        <div style="position: relative; margin-top: 30px;">
-                            <div style="position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%);">
-                                <div style="width: 40px; height: 40px; border: 2px solid #ffcc00; border-radius: 50%; display: flex; justify-content: center; align-items: center; animation: pulse 1.5s infinite;">
-                                    <div style="width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 12px solid #ffcc00; transform: translateY(5px);"></div>
-                                </div>
-                            </div>
-                            <p style="margin-top: 5px; color: #ffcc00; font-weight: bold;">点击下方分享按钮</p>
-                        </div>
-                        
-                        <div style="margin-top: 60px;">
-                            <button id="shareButton" style="background: #ffcc00; color: black; border: none; padding: 10px 30px; border-radius: 30px; font-weight: bold; font-size: 16px; display: flex; align-items: center; margin: 0 auto;">
-                                <svg style="width: 20px; height: 20px; margin-right: 8px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M18 8L12 2L6 8" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M12 2V16" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M20 14V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V14" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                                点此打开分享
-                            </button>
-                        </div>
-                    </div>
-                    <style>
-                        @keyframes pulse {
-                            0% { transform: translateY(0) scale(1); }
-                            50% { transform: translateY(10px) scale(1.1); }
-                            100% { transform: translateY(0) scale(1); }
-                        }
-                    </style>
-                `);
-                
-                // 为分享按钮添加点击事件
-                setTimeout(() => {
-                    const shareButton = document.getElementById('shareButton');
-                    if (shareButton) {
-                        shareButton.addEventListener('click', () => {
-                            // 调用Web Share API
-                            if (navigator.share) {
-                                navigator.share({
-                                    title: '彩旭国际',
-                                    text: '彩旭国际官方网站',
-                                    url: 'https://www.xucai666.com'
-                                }).then(() => {
-                                    console.log('分享成功');
-                                }).catch(err => {
-                                    console.log('分享失败', err);
-                                });
-                            } else {
-                                alert('您的浏览器不支持分享功能，请手动点击浏览器底部的分享按钮。');
-                            }
-                        });
-                    }
-                }, 100);
-            } else {
-                // 安卓和其他设备的通用指南
-                showInstallMessage(`
-                    <div style="text-align: left;">
-                        <div style="margin: 0 0 10px; text-align: center;">
-                            <p style="color: #ffcc00; font-weight: bold; font-size: 16px;">
-                                将官网 www.xucai666.com 添加到桌面
-                            </p>
-                        </div>
-                        
-                        <div style="margin-bottom: 20px;">
-                            <p style="font-weight: bold; color: #ffcc00; text-align: center; margin-bottom: 10px;">安卓设备安装步骤：</p>
-                            <ol style="margin-left: 20px;">
-                                <li>点击浏览器右上角的菜单按钮 ⋮</li>
-                                <li>选择"添加到主屏幕"或"安装应用"</li>
-                                <li>点击"添加"确认</li>
-                            </ol>
-                        </div>
-                        
-                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #333;">
-                            <p style="font-weight: bold; color: #ffcc00; text-align: center; margin-bottom: 10px;">iOS设备安装步骤：</p>
-                            <ol style="margin-left: 20px;">
-                                <li>点击浏览器底部的"分享"按钮 □↑</li>
-                                <li>在弹出的菜单中向上滑动</li>
-                                <li>找到并点击"添加到主屏幕"</li>
-                                <li>点击右上角"添加"按钮</li>
-                            </ol>
-                        </div>
-                        
-                        <p style="margin-top: 15px; color: #ffcc00; text-align: center;">
-                            添加后即可在桌面一键访问彩旭国际官网
-                        </p>
-                    </div>
-                `);
-            }
-        }
-        
-        // 显示安装消息
-        function showInstallMessage(message) {
-            // 创建消息元素
-            const messageBox = document.createElement('div');
-            messageBox.className = 'install-message';
-            messageBox.innerHTML = `
-                <div class="message-content">
-                    ${message}
-                    <button onclick="this.parentNode.parentNode.remove()" style="margin-top: 20px; padding: 8px 25px;">我知道了</button>
-                </div>
-            `;
-            document.body.appendChild(messageBox);
-            
-            // iOS设备不自动关闭提示，为用户提供充足时间
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            if (!isIOS) {
-                // 非iOS设备10秒后自动关闭
-                setTimeout(() => {
-                    if (document.body.contains(messageBox)) {
-                        messageBox.remove();
-                    }
-                }, 10000);
-            }
-        }
-        
         // 检测设备类型
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         
@@ -785,6 +615,89 @@ body {
         function checkOrientation() {
             const isLandscape = window.innerWidth > window.innerHeight;
             document.body.classList.toggle('landscape', isLandscape);
+        }
+        
+        // 添加到主屏幕的函数
+        function addToHomeScreen() {
+            if (deferredPrompt) {
+                // 显示安装提示
+                deferredPrompt.prompt();
+                
+                // 等待用户响应提示
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('用户接受了安装提示');
+                        // 显示成功提示
+                        showInstallMessage('添加成功！请在手机桌面查看彩旭国际图标<br>点击图标即可访问官网');
+                    } else {
+                        console.log('用户拒绝了安装提示');
+                        // 用户拒绝了自动安装，显示完整的安装指南
+                        showCompleteInstallGuide();
+                    }
+                    // 不再需要 prompt()，清除它
+                    deferredPrompt = null;
+                });
+            } else {
+                // 如果不支持自动安装，显示完整的安装指南
+                showCompleteInstallGuide();
+            }
+        }
+        
+        // 显示完整的安装指南（同时包含安卓和iOS）
+        function showCompleteInstallGuide() {
+            showInstallMessage(`
+                <div style="text-align: left;">
+                    <div style="margin: 0 0 10px; text-align: center;">
+                        <p style="color: #ffcc00; font-weight: bold; font-size: 16px;">
+                            将官网 www.xucai666.com 添加到桌面
+                        </p>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <p style="font-weight: bold; color: #ffcc00; text-align: center; margin-bottom: 10px;">安卓设备安装步骤：</p>
+                        <ol style="margin-left: 20px;">
+                            <li>点击浏览器右上角的菜单按钮 ⋮</li>
+                            <li>选择"添加到主屏幕"或"安装应用"</li>
+                            <li>点击"添加"确认</li>
+                        </ol>
+                    </div>
+                    
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #333;">
+                        <p style="font-weight: bold; color: #ffcc00; text-align: center; margin-bottom: 10px;">iOS设备安装步骤：</p>
+                        <ol style="margin-left: 20px;">
+                            <li>点击浏览器底部的"分享"按钮 □↑</li>
+                            <li>在弹出的菜单中向上滑动</li>
+                            <li>找到并点击"添加到主屏幕"</li>
+                            <li>点击右上角"添加"按钮</li>
+                        </ol>
+                    </div>
+                    
+                    <p style="margin-top: 15px; color: #ffcc00; text-align: center;">
+                        添加后即可在桌面一键访问彩旭国际官网
+                    </p>
+                </div>
+            `);
+        }
+        
+        // 显示安装消息
+        function showInstallMessage(message) {
+            // 创建消息元素
+            const messageBox = document.createElement('div');
+            messageBox.className = 'install-message';
+            messageBox.innerHTML = `
+                <div class="message-content">
+                    ${message}
+                    <button onclick="this.parentNode.parentNode.remove()">我知道了</button>
+                </div>
+            `;
+            document.body.appendChild(messageBox);
+            
+            // 8秒后自动关闭
+            setTimeout(() => {
+                if (document.body.contains(messageBox)) {
+                    messageBox.remove();
+                }
+            }, 8000);
         }
     </script>
     
