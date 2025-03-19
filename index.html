@@ -68,29 +68,47 @@ body {
     padding: 12px 15px;
     border-radius: 10px;
     cursor: pointer;
-    z-index: 1001;
+    box-shadow: none;
+    transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(255, 204, 0, 0.3);
-    backdrop-filter: blur(5px);
-    background-color: rgba(0, 0, 0, 0.5);
+    font-size: 14px;
+    width: 90px;
+    text-align: center;
+    /* 增加触摸区域 */
+    touch-action: manipulation;
 }
 
-.side-button.clicked {
-    transform: scale(0.95);
-    background-color: rgba(255, 204, 0, 0.1);
+.side-button:hover {
+    background: transparent;
+    transform: translateY(-50%) scale(1.05);
 }
 
+/* LOGO图片样式 */
 .logo-image {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #ffcc00;
-    box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 2px;
+    border-radius: 6px;
+    position: relative;
+    animation: pulse 2s infinite;
+    border: none;
+}
+
+/* LOGO脉冲动画 */
+@keyframes pulse {
+    0% {
+        filter: drop-shadow(0 0 0px #ffcc00);
+    }
+    50% {
+        filter: drop-shadow(0 0 10px #ffcc00);
+    }
+    100% {
+        filter: drop-shadow(0 0 0px #ffcc00);
+    }
 }
 
 /* 导航按钮组样式 */
@@ -189,19 +207,46 @@ body {
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 0 30px rgba(255, 204, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.image-container:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 40px rgba(255, 204, 0, 0.3);
+    transition: all 0.5s ease;
+    animation: floatContainer 3s ease-in-out infinite;
 }
 
 .main-image {
     width: 100%;
     height: auto;
     display: block;
-    transition: transform 0.3s ease;
+    transition: transform 0.5s ease;
+    animation: fadeInAndGlow 1.5s ease-out;
+}
+
+.main-image:hover {
+    transform: scale(1.02);
+}
+
+/* 图片加载动画 */
+@keyframes fadeInAndGlow {
+    0% {
+        opacity: 0;
+        filter: brightness(1);
+    }
+    50% {
+        opacity: 1;
+        filter: brightness(1.5);
+    }
+    100% {
+        opacity: 1;
+        filter: brightness(1);
+    }
+}
+
+/* 浮动动画 */
+@keyframes floatContainer {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 /* 加载动画样式 */
@@ -250,41 +295,49 @@ body {
 /* 移动端适配 */
 @media (max-width: 768px) {
     .nav-wrapper {
-        top: auto;
-        bottom: 20px;
-        transform: none;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 0;
     }
 
     .side-button {
-        left: 20px;
-        flex-direction: row;
-        padding: 8px 12px;
+        left: 10px;
+        flex-direction: column;
+        padding: 5px;
+        position: fixed;
+    }
+
+    .side-button div {
+        font-size: 14px;
+        font-weight: bold;
+        color: white;
+        text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     }
 
     .logo-image {
-        width: 30px;
-        height: 30px;
+        width: 80px;
+        height: 80px;
+        margin-bottom: 2px;
     }
 
     .nav-buttons {
-        position: absolute;
-        left: 0;
-        bottom: 70px;
-        width: calc(100vw - 40px);
+        position: fixed;
+        left: 80px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: calc(100vw - 100px);
         max-height: 60vh;
         overflow-y: auto;
     }
 
     .nav-buttons.active {
-        left: 0;
-    }
-
-    body.landscape .nav-wrapper {
-        bottom: 10px;
+        left: 80px;
+        transform: translateY(-50%);
+        opacity: 1;
     }
 
     body.landscape .nav-buttons {
-        max-height: 40vh;
+        max-height: 80vh;
     }
 }
 
@@ -645,38 +698,180 @@ body {
         
         // 显示完整的安装指南（同时包含安卓和iOS）
         function showCompleteInstallGuide() {
-            showInstallMessage(`
-                <div style="text-align: left;">
-                    <div style="margin: 0 0 10px; text-align: center;">
-                        <p style="color: #ffcc00; font-weight: bold; font-size: 16px;">
-                            将官网 www.xucai666.com 添加到桌面
+            // 检测iOS设备
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            // 检测Android设备
+            const isAndroid = /Android/.test(navigator.userAgent);
+            // 检测Chrome浏览器
+            const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+            
+            if (isIOS) {
+                // iOS设备专用指南，带动画箭头指向Safari底部分享按钮
+                showInstallMessage(`
+                    <div style="text-align: center;">
+                        <div style="margin: 0 0 15px;">
+                            <p style="color: #ffcc00; font-weight: bold; font-size: 18px;">
+                                添加到iPhone主屏幕
+                            </p>
+                            <p style="margin-top: 10px; font-size: 14px;">
+                                将彩旭国际添加到主屏幕，一键访问官网
+                            </p>
+                        </div>
+                        
+                        <div style="position: relative; margin: 25px auto; width: 280px; border: 1px solid #333; border-radius: 15px; padding: 15px; background: rgba(0,0,0,0.3);">
+                            <p style="font-weight: bold; margin-bottom: 15px;">请按照以下步骤操作：</p>
+                            
+                            <div style="text-align: left; margin-bottom: 10px; display: flex; align-items: center;">
+                                <span style="background: #ffcc00; color: black; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-weight: bold;">1</span>
+                                <span>点击底部<strong style="color: #ffcc00;">分享按钮</strong></span>
+                            </div>
+                            
+                            <div style="text-align: left; margin-bottom: 10px; display: flex; align-items: center;">
+                                <span style="background: #ffcc00; color: black; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-weight: bold;">2</span>
+                                <span>滑动菜单，找到<strong style="color: #ffcc00;">添加到主屏幕</strong></span>
+                            </div>
+                            
+                            <div style="text-align: left; margin-bottom: 5px; display: flex; align-items: center;">
+                                <span style="background: #ffcc00; color: black; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-weight: bold;">3</span>
+                                <span>点击<strong style="color: #ffcc00;">添加</strong>完成</span>
+                            </div>
+                        </div>
+                        
+                        <div style="position: relative; margin-top: 30px;">
+                            <div style="position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%);">
+                                <div style="width: 40px; height: 40px; border: 2px solid #ffcc00; border-radius: 50%; display: flex; justify-content: center; align-items: center; animation: pulse 1.5s infinite;">
+                                    <div style="width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 12px solid #ffcc00; transform: translateY(5px);"></div>
+                                </div>
+                            </div>
+                            <p style="margin-top: 5px; color: #ffcc00; font-weight: bold;">点击下方分享按钮</p>
+                        </div>
+                        
+                        <div style="margin-top: 60px;">
+                            <button id="shareButton" style="background: #ffcc00; color: black; border: none; padding: 10px 30px; border-radius: 30px; font-weight: bold; font-size: 16px; display: flex; align-items: center; margin: 0 auto;">
+                                <svg style="width: 20px; height: 20px; margin-right: 8px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M18 8L12 2L6 8" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M12 2V16" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M20 14V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V14" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                点此打开分享
+                            </button>
+                        </div>
+                    </div>
+                    <style>
+                        @keyframes pulse {
+                            0% { transform: translateY(0) scale(1); }
+                            50% { transform: translateY(10px) scale(1.1); }
+                            100% { transform: translateY(0) scale(1); }
+                        }
+                    </style>
+                `);
+                
+                // 为分享按钮添加点击事件
+                setTimeout(() => {
+                    const shareButton = document.getElementById('shareButton');
+                    if (shareButton) {
+                        shareButton.addEventListener('click', () => {
+                            // 调用Web Share API
+                            if (navigator.share) {
+                                navigator.share({
+                                    title: '彩旭国际',
+                                    text: '彩旭国际官方网站',
+                                    url: 'https://www.xucai666.com'
+                                }).then(() => {
+                                    console.log('分享成功');
+                                }).catch(err => {
+                                    console.log('分享失败', err);
+                                });
+                            } else {
+                                alert('您的浏览器不支持分享功能，请手动点击浏览器底部的分享按钮。');
+                            }
+                        });
+                    }
+                }, 100);
+            } else if (isAndroid && isChrome) {
+                // 安卓 Chrome 专用指南
+                showInstallMessage(`
+                    <div style="text-align: center;">
+                        <div style="margin: 0 0 15px;">
+                            <p style="color: #ffcc00; font-weight: bold; font-size: 18px;">
+                                添加到安卓主屏幕
+                            </p>
+                            <p style="margin-top: 10px; font-size: 14px;">
+                                将彩旭国际添加到主屏幕，一键访问官网
+                            </p>
+                        </div>
+                        
+                        <div style="position: relative; margin: 25px auto; width: 280px; border: 1px solid #333; border-radius: 15px; padding: 15px; background: rgba(0,0,0,0.3);">
+                            <p style="font-weight: bold; margin-bottom: 15px;">请按照以下步骤操作：</p>
+                            
+                            <div style="text-align: left; margin-bottom: 10px; display: flex; align-items: center;">
+                                <span style="background: #ffcc00; color: black; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-weight: bold;">1</span>
+                                <span>点击右上角<strong style="color: #ffcc00;">三点菜单</strong> ⋮</span>
+                            </div>
+                            
+                            <div style="text-align: left; margin-bottom: 10px; display: flex; align-items: center;">
+                                <span style="background: #ffcc00; color: black; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-weight: bold;">2</span>
+                                <span>选择<strong style="color: #ffcc00;">安装应用</strong></span>
+                            </div>
+                            
+                            <div style="text-align: left; margin-bottom: 5px; display: flex; align-items: center;">
+                                <span style="background: #ffcc00; color: black; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-weight: bold;">3</span>
+                                <span>点击<strong style="color: #ffcc00;">安装</strong>完成</span>
+                            </div>
+                        </div>
+                        
+                        <div style="position: relative; margin-top: 20px;">
+                            <div style="position: absolute; top: -20px; right: 45px; transform: rotate(-45deg);">
+                                <div style="animation: point 1.5s infinite alternate;">
+                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="#ffcc00">
+                                        <path d="M7.33 24l-2.83-2.829 9.339-9.175-9.339-9.167 2.83-2.829 12.17 11.996z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <style>
+                        @keyframes point {
+                            0% { transform: translateY(0); }
+                            100% { transform: translateY(-10px); }
+                        }
+                    </style>
+                `);
+            } else {
+                // 其他浏览器的通用指南
+                showInstallMessage(`
+                    <div style="text-align: left;">
+                        <div style="margin: 0 0 10px; text-align: center;">
+                            <p style="color: #ffcc00; font-weight: bold; font-size: 16px;">
+                                将官网 www.xucai666.com 添加到桌面
+                            </p>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <p style="font-weight: bold; color: #ffcc00; text-align: center; margin-bottom: 10px;">安卓设备安装步骤：</p>
+                            <ol style="margin-left: 20px;">
+                                <li>点击浏览器右上角的菜单按钮 ⋮</li>
+                                <li>选择"添加到主屏幕"或"安装应用"</li>
+                                <li>点击"添加"确认</li>
+                            </ol>
+                        </div>
+                        
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #333;">
+                            <p style="font-weight: bold; color: #ffcc00; text-align: center; margin-bottom: 10px;">iOS设备安装步骤：</p>
+                            <ol style="margin-left: 20px;">
+                                <li>点击浏览器底部的"分享"按钮 □↑</li>
+                                <li>在弹出的菜单中向上滑动</li>
+                                <li>找到并点击"添加到主屏幕"</li>
+                                <li>点击右上角"添加"按钮</li>
+                            </ol>
+                        </div>
+                        
+                        <p style="margin-top: 15px; color: #ffcc00; text-align: center;">
+                            添加后即可在桌面一键访问彩旭国际官网
                         </p>
                     </div>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <p style="font-weight: bold; color: #ffcc00; text-align: center; margin-bottom: 10px;">安卓设备安装步骤：</p>
-                        <ol style="margin-left: 20px;">
-                            <li>点击浏览器右上角的菜单按钮 ⋮</li>
-                            <li>选择"添加到主屏幕"或"安装应用"</li>
-                            <li>点击"添加"确认</li>
-                        </ol>
-                    </div>
-                    
-                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #333;">
-                        <p style="font-weight: bold; color: #ffcc00; text-align: center; margin-bottom: 10px;">iOS设备安装步骤：</p>
-                        <ol style="margin-left: 20px;">
-                            <li>点击浏览器底部的"分享"按钮 □↑</li>
-                            <li>在弹出的菜单中向上滑动</li>
-                            <li>找到并点击"添加到主屏幕"</li>
-                            <li>点击右上角"添加"按钮</li>
-                        </ol>
-                    </div>
-                    
-                    <p style="margin-top: 15px; color: #ffcc00; text-align: center;">
-                        添加后即可在桌面一键访问彩旭国际官网
-                    </p>
-                </div>
-            `);
+                `);
+            }
         }
         
         // 显示安装消息
@@ -692,12 +887,16 @@ body {
             `;
             document.body.appendChild(messageBox);
             
-            // 8秒后自动关闭
-            setTimeout(() => {
-                if (document.body.contains(messageBox)) {
-                    messageBox.remove();
-                }
-            }, 8000);
+            // iOS设备不自动关闭提示，为用户提供充足时间
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            if (!isIOS) {
+                // 非iOS设备10秒后自动关闭
+                setTimeout(() => {
+                    if (document.body.contains(messageBox)) {
+                        messageBox.remove();
+                    }
+                }, 12000);
+            }
         }
     </script>
     
