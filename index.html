@@ -228,8 +228,9 @@ body {
     transform: translateY(-2px);
 }
 
+/* 速度标签样式 */
 .speed {
-    background-color: rgba(0, 150, 0, 0.5);
+    background-color: #2d8e2d;
     color: white;
     padding: 4px 8px;
     border-radius: 5px;
@@ -243,9 +244,10 @@ body {
     font-size: 14px;
 }
 
+/* 进入按钮样式 */
 .download-btn {
-    background: linear-gradient(135deg, #3498db, #2980b9);
-    color: white;
+    background: #3498db;
+    color: white !important;
     border: none;
     padding: 6px 12px;
     border-radius: 5px;
@@ -257,10 +259,31 @@ body {
 }
 
 .download-btn:hover {
-    background: linear-gradient(135deg, #2980b9, #3498db);
+    background: #2980b9;
     transform: scale(1.05);
 }
 
+/* 一键添加按钮样式 */
+.add-home-btn {
+    background: #ffcc00;
+    color: #000 !important;
+    font-weight: bold;
+}
+
+.add-home-btn:hover {
+    background: #ff9900;
+    transform: scale(1.05);
+}
+
+/* 官网标签样式 */
+.highlight-speed {
+    background-color: #ffcc00 !important;
+    color: #000 !important;
+    font-weight: bold;
+    position: relative;
+}
+
+/* 按钮点击效果 */
 .btn-clicked {
     transform: scale(0.95);
 }
@@ -414,135 +437,32 @@ body {
     }
 }
 
-/* 添加到桌面按钮样式 */
-.highlight-speed {
-    background-color: #ffcc00 !important;
-    color: #000 !important;
-    font-weight: bold;
-    position: relative;
-    animation: pulse-gold 2s infinite;
-}
-
-@keyframes pulse-gold {
-    0% {
-        box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.7);
-    }
-    70% {
-        box-shadow: 0 0 0 6px rgba(255, 204, 0, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(255, 204, 0, 0);
-    }
-}
-
-.add-home-btn {
-    background: linear-gradient(135deg, #ffcc00, #ff9900);
-    color: #000;
-    font-weight: bold;
-    position: relative;
-    overflow: hidden;
-}
-
-.add-home-btn::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
-    opacity: 0;
-    z-index: 1;
-    transition: opacity 0.3s;
-}
-
-.add-home-btn:hover {
-    background: linear-gradient(135deg, #ff9900, #ffcc00);
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
-}
-
-.add-home-btn:hover::before {
-    opacity: 0.7;
-    animation: btnPulse 1.5s infinite;
-}
-
-@keyframes btnPulse {
-    0%, 100% {
-        opacity: 0.3;
-    }
-    50% {
-        opacity: 0.7;
-    }
-}
-
 /* 安装消息样式 */
 .install-message {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.85);
-    z-index: 2000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    animation: fadeIn 0.3s ease;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-}
-
-.message-content {
-    background-color: #1a1a1a;
-    border: 2px solid #ffcc00;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
     border-radius: 15px;
-    padding: 20px;
-    width: 90%;
-    max-width: 350px;
-    text-align: center;
-    box-shadow: 0 0 30px rgba(255, 204, 0, 0.4);
-    max-height: 90vh;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    max-height: 80vh;
     overflow-y: auto;
+    padding: 20px;
 }
 
-.message-content p {
-    color: white;
-    margin-bottom: 15px;
+.install-message img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.install-steps {
+    margin: 15px 0;
+    padding-left: 20px;
+}
+
+.install-steps li {
+    margin: 10px 0;
     line-height: 1.5;
-    font-size: 14px;
-}
-
-.message-content ol {
-    color: white;
-    text-align: left;
-    line-height: 1.6;
-    font-size: 14px;
-}
-
-.message-content button {
-    background: linear-gradient(135deg, #ffcc00, #ff9900);
-    color: #000;
-    border: none;
-    padding: 10px 25px;
-    border-radius: 25px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-top: 15px;
-    font-size: 16px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-.message-content button:hover {
-    transform: scale(1.05);
-    background: linear-gradient(135deg, #ff9900, #ffcc00);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
 }
     </style>
     <!-- 添加全局函数定义 -->
@@ -758,188 +678,90 @@ body {
         
         // 添加到主屏幕的函数
         function addToHomeScreen() {
-            if (deferredPrompt) {
-                // 显示安装提示
-                deferredPrompt.prompt();
-                
-                // 等待用户响应提示
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('用户接受了安装提示');
-                        // 显示成功提示
-                        showInstallMessage('添加成功！请在手机桌面查看彩旭国际图标<br>点击图标即可访问官网');
-                    } else {
-                        console.log('用户拒绝了安装提示');
-                        // 用户拒绝了自动安装，显示完整的安装指南
-                        showCompleteInstallGuide();
-                    }
-                    // 不再需要 prompt()，清除它
-                    deferredPrompt = null;
-                });
-            } else {
-                // 如果不支持自动安装，显示完整的安装指南
-                showCompleteInstallGuide();
-            }
-        }
-        
-        // 显示完整的安装指南（同时包含安卓和iOS）
-        function showCompleteInstallGuide() {
-            // 检测iOS设备
+            // 检测设备类型
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            // 检测Android设备
-            const isAndroid = /Android/.test(navigator.userAgent);
-            // 检测Chrome浏览器
-            const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
             
-            if (isIOS) {
-                // iOS设备专用指南，带真实截图指导
-                showInstallMessage(`
-                    <div style="text-align: center;">
-                        <div style="margin: 0 0 15px;">
-                            <p style="color: #ffcc00; font-weight: bold; font-size: 18px;">
-                                添加到iPhone主屏幕
-                            </p>
-                            <p style="margin-top: 10px; font-size: 14px;">
-                                将彩旭国际添加到主屏幕，一键访问官网
-                            </p>
-                        </div>
-                        
-                        <div style="position: relative; margin: 25px auto; width: 280px; border: 1px solid #333; border-radius: 15px; padding: 15px; background: rgba(0,0,0,0.3);">
-                            <p style="font-weight: bold; margin-bottom: 15px; text-align: center;">请按照以下步骤操作：</p>
-                            
-                            <div style="text-align: left; margin-bottom: 10px; display: flex; align-items: center;">
-                                <span style="background: #ffcc00; color: black; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-weight: bold;">1</span>
-                                <span>点击浏览器底部<strong style="color: #ffcc00;">分享按钮</strong> <span style="font-size: 18px;">□↑</span></span>
-                            </div>
-                            
-                            <div style="text-align: left; margin-bottom: 10px; display: flex; align-items: center;">
-                                <span style="background: #ffcc00; color: black; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-weight: bold;">2</span>
-                                <span>在弹出菜单中点击<strong style="color: #ffcc00;">添加到主屏幕</strong>选项</span>
-                            </div>
-                            
-                            <div style="text-align: left; margin-bottom: 5px; display: flex; align-items: center;">
-                                <span style="background: #ffcc00; color: black; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-weight: bold;">3</span>
-                                <span>点击右上角<strong style="color: #ffcc00;">添加</strong>按钮完成</span>
-                            </div>
-                        </div>
-                        
-                        <div style="margin: 30px auto 0; text-align: center;">
-                            <p style="color: #ffcc00; font-size: 14px; margin-bottom: 15px; font-weight: bold;">👇 iPhone操作图解 👇</p>
-                            <img src="./images/ios.jpg" style="width: 100%; max-width: 300px; border-radius: 10px; border: 1px solid #444; margin: 0 auto; box-shadow: 0 0 15px rgba(255, 204, 0, 0.3);" alt="iOS添加到主屏幕操作指南">
-                        </div>
-                    </div>
-                `);
-            } else if (isAndroid && isChrome) {
-                // 安卓 Chrome 专用指南
-                showInstallMessage(`
-                    <div style="text-align: center;">
-                        <div style="margin: 0 0 15px;">
-                            <p style="color: #ffcc00; font-weight: bold; font-size: 18px;">
-                                添加到安卓主屏幕
-                            </p>
-                            <p style="margin-top: 10px; font-size: 14px;">
-                                将彩旭国际添加到主屏幕，一键访问官网
-                            </p>
-                        </div>
-                        
-                        <div style="position: relative; margin: 25px auto; width: 280px; border: 1px solid #333; border-radius: 15px; padding: 15px; background: rgba(0,0,0,0.3);">
-                            <p style="font-weight: bold; margin-bottom: 15px;">请按照以下步骤操作：</p>
-                            
-                            <div style="text-align: left; margin-bottom: 10px; display: flex; align-items: center;">
-                                <span style="background: #ffcc00; color: black; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-weight: bold;">1</span>
-                                <span>点击右上角<strong style="color: #ffcc00;">三点菜单</strong> ⋮</span>
-                            </div>
-                            
-                            <div style="text-align: left; margin-bottom: 10px; display: flex; align-items: center;">
-                                <span style="background: #ffcc00; color: black; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-weight: bold;">2</span>
-                                <span>选择<strong style="color: #ffcc00;">安装应用</strong></span>
-                            </div>
-                            
-                            <div style="text-align: left; margin-bottom: 5px; display: flex; align-items: center;">
-                                <span style="background: #ffcc00; color: black; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-weight: bold;">3</span>
-                                <span>点击<strong style="color: #ffcc00;">安装</strong>完成</span>
-                            </div>
-                        </div>
-                        
-                        <div style="position: relative; margin-top: 20px;">
-                            <div style="position: absolute; top: -20px; right: 45px; transform: rotate(-45deg);">
-                                <div style="animation: point 1.5s infinite alternate;">
-                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="#ffcc00">
-                                        <path d="M7.33 24l-2.83-2.829 9.339-9.175-9.339-9.167 2.83-2.829 12.17 11.996z"/>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <style>
-                        @keyframes point {
-                            0% { transform: translateY(0); }
-                            100% { transform: translateY(-10px); }
-                        }
-                    </style>
-                `);
-            } else {
-                // 其他浏览器的通用指南
-                showInstallMessage(`
-                    <div style="text-align: left;">
-                        <div style="margin: 0 0 10px; text-align: center;">
-                            <p style="color: #ffcc00; font-weight: bold; font-size: 16px;">
-                                将官网 www.xucai666.com 添加到桌面
-                            </p>
-                        </div>
-                        
-                        <div style="margin-bottom: 20px;">
-                            <p style="font-weight: bold; color: #ffcc00; text-align: center; margin-bottom: 10px;">安卓设备安装步骤：</p>
-                            <ol style="margin-left: 20px;">
-                                <li>点击浏览器右上角的菜单按钮 ⋮</li>
-                                <li>选择"添加到主屏幕"或"安装应用"</li>
-                                <li>点击"添加"确认</li>
-                            </ol>
-                        </div>
-                        
-                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #333;">
-                            <p style="font-weight: bold; color: #ffcc00; text-align: center; margin-bottom: 10px;">iOS设备安装步骤：</p>
-                            <ol style="margin-left: 20px;">
-                                <li>点击浏览器底部的"分享"按钮 □↑</li>
-                                <li>在弹出的菜单中向上滑动</li>
-                                <li>找到并点击"添加到主屏幕"</li>
-                                <li>点击右上角"添加"按钮</li>
-                            </ol>
-                        </div>
-                        
-                        <p style="margin-top: 15px; color: #ffcc00; text-align: center;">
-                            添加后即可在桌面一键访问彩旭国际官网
-                        </p>
-                    </div>
-                `);
-            }
-        }
-        
-        // 显示安装消息
-        function showInstallMessage(message) {
-            // 创建消息元素
-            const messageBox = document.createElement('div');
-            messageBox.className = 'install-message';
-            messageBox.innerHTML = `
-                <div class="message-content">
-                    ${message}
-                    <button onclick="this.parentNode.parentNode.remove()">我知道了</button>
-                </div>
+            // 创建弹窗容器
+            const popup = document.createElement('div');
+            popup.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.85);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 2000;
             `;
-            document.body.appendChild(messageBox);
-            
-            // iOS设备不自动关闭提示，为用户提供充足时间
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            if (!isIOS) {
-                // 非iOS设备15秒后自动关闭
-                setTimeout(() => {
-                    if (document.body.contains(messageBox)) {
-                        messageBox.remove();
-                    }
-                }, 15000);
+
+            // 创建内容容器
+            const content = document.createElement('div');
+            content.style.cssText = `
+                background: #1a1a1a;
+                padding: 20px;
+                border-radius: 15px;
+                max-width: 90%;
+                width: 350px;
+                border: 2px solid #ffcc00;
+                box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
+            `;
+
+            // 定义要添加到主屏幕的网址
+            const customUrl = 'https://085757.cc';
+
+            // 根据设备类型显示不同内容
+            if (isIOS) {
+                content.innerHTML = `
+                    <h3 style="color: #ffcc00; margin-bottom: 15px; text-align: center;">在iPhone上添加到主屏幕</h3>
+                    <img src="./images/ios.jpg" alt="iOS安装指南" style="width: 100%; max-width: 300px; border-radius: 8px; margin: 10px auto; display: block;">
+                    <ol style="color: white; margin: 15px 0; padding-left: 20px;">
+                        <li style="margin: 10px 0;">点击下方分享按钮 □↑</li>
+                        <li style="margin: 10px 0;">选择"添加到主屏幕"</li>
+                        <li style="margin: 10px 0;">点击"添加"完成安装</li>
+                    </ol>
+                    <p style="color: #ffcc00; margin: 10px 0; font-size: 14px;">安装完成后将直接访问: ${customUrl}</p>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: #ffcc00; color: #000; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; margin: 10px auto 0; display: block;">我知道了</button>
+                `;
+                setTimeout(() => popup.remove(), 15000);
+            } else {
+                content.innerHTML = `
+                    <h3 style="color: #ffcc00; margin-bottom: 15px; text-align: center;">添加到主屏幕</h3>
+                    <p style="color: white; margin: 10px 0;">请按照以下步骤操作：</p>
+                    <ol style="color: white; margin: 15px 0; padding-left: 20px;">
+                        <li style="margin: 10px 0;">点击浏览器右上角的菜单按钮 ⋮</li>
+                        <li style="margin: 10px 0;">选择"添加到主屏幕"或"安装应用"</li>
+                        <li style="margin: 10px 0;">点击"添加"确认</li>
+                    </ol>
+                    <p style="color: #ffcc00; margin: 10px 0; font-size: 14px;">安装完成后将直接访问: ${customUrl}</p>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: #ffcc00; color: #000; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; margin: 10px auto 0; display: block;">我知道了</button>
+                `;
+                setTimeout(() => popup.remove(), 10000);
+            }
+
+            // 添加内容到弹窗
+            popup.appendChild(content);
+            document.body.appendChild(popup);
+
+            // 如果是支持 PWA 安装的设备,修改 start_url
+            if (window.deferredPrompt) {
+                // 修改 manifest 中的 start_url
+                fetch('./manifest.json')
+                    .then(response => response.json())
+                    .then(manifest => {
+                        manifest.start_url = customUrl;
+                        const blob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+                        const manifestUrl = URL.createObjectURL(blob);
+                        const existingLink = document.querySelector('link[rel="manifest"]');
+                        if (existingLink) {
+                            existingLink.href = manifestUrl;
+                        }
+                    })
+                    .catch(console.error);
             }
         }
-
+        
         // 点击音效函数
         function playClickSound() {
             // 创建音频上下文
