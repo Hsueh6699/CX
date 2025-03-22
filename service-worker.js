@@ -27,21 +27,50 @@ self.addEventListener('install', function(event) {
 // 激活事件 - 清理旧缓存
 self.addEventListener('activate', function(event) {
   console.log('Service Worker 激活中...');
+  
+  // 在激活成功后尝试提供安装提示
+  self.registration.showNotification('安装提示', {
+    body: '将本站添加到主屏幕，获得更好的体验！',
+    icon: './images/icon-192x192.png',
+    badge: './images/favicon.ico',
+    actions: [
+      {
+        action: 'install',
+        title: '立即安装'
+      },
+      {
+        action: 'cancel',
+        title: '取消'
+      }
+    ]
+  }).catch(err => console.log('通知权限未获取或不支持:', err));
+  
+  // 获取所有缓存键名
   event.waitUntil(
     caches.keys().then(function(cacheNames) {
       return Promise.all(
         cacheNames.map(function(cacheName) {
           if (cacheName !== CACHE_NAME) {
-            console.log('删除旧缓存:', cacheName);
+            console.log('Service Worker: 清理旧缓存:', cacheName);
             return caches.delete(cacheName);
           }
         })
       );
-    }).then(() => {
-      console.log('Service Worker 现在控制客户端');
+    }).then(function() {
+      console.log('Service Worker: 声明控制权');
       return self.clients.claim();
     })
   );
+});
+
+// 处理通知点击事件
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+  
+  if (event.action === 'install') {
+    // 通知用户如何安装
+    clients.openWindow('./');
+  }
 });
 
 // 请求拦截

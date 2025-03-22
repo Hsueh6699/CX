@@ -10,6 +10,10 @@
   "prefer_related_applications": false,
   "related_applications": [],
   "scope": "./",
+  "categories": ["entertainment", "gaming"],
+  "dir": "auto",
+  "lang": "zh-CN",
+  "iarc_rating_id": "",
   "shortcuts": [
     {
       "name": "进入官网",
