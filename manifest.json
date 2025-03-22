@@ -2,11 +2,26 @@
   "name": "在线娱乐平台",
   "short_name": "085757.cc",
   "description": "在线娱乐平台 - 提供优质在线服务",
-  "start_url": "./index.html",
+  "start_url": "./index.html?source=pwa",
   "display": "standalone",
   "background_color": "#0a1529",
   "theme_color": "#0a1529",
   "orientation": "portrait",
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "进入官网",
+      "short_name": "官网",
+      "description": "直接进入官网体验",
+      "url": "https://www.xucai666.com/?code=17p/#/home"
+    },
+    {
+      "name": "立即注册",
+      "short_name": "注册",
+      "description": "快速注册账号",
+      "url": "https://www.xucai666.com/?code=17p/#/register"
+    }
+  ],
   "icons": [
     {
       "src": "images/icon-192x192.png",

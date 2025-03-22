@@ -716,6 +716,8 @@
         <div class="install-box">
             <button class="close-install" id="closeInstall">×</button>
             <div class="install-title">如何添加到主屏幕</div>
+            
+            <!-- 安卓标准说明 -->
             <div id="androidInstructions">
                 <ul class="install-steps">
                     <li>点击浏览器右上角的菜单按钮 (⋮)</li>
@@ -726,6 +728,8 @@
                 </ul>
                 <p style="margin-top: 15px; font-size: 14px; color: #666; font-style: italic;">提示：不同版本的Chrome可能有略微不同的界面，如果无法找到"安装"选项，请尝试在Chrome地址栏右侧查找"安装"图标。</p>
             </div>
+            
+            <!-- iOS说明 -->
             <div id="iosInstructions" style="display: none;">
                 <ul class="install-steps">
                     <li>点击底部的分享按钮 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg></li>
@@ -734,6 +738,20 @@
                     <li>完成后，您可以通过主屏幕图标直接访问085757.cc</li>
                 </ul>
             </div>
+            
+            <!-- 小米MIUI说明 -->
+            <div id="miuiInstructions" style="display: none;">
+                <ul class="install-steps">
+                    <li>点击浏览器右下角"菜单"按钮</li>
+                    <li>在弹出的菜单中选择"添加到桌面"选项</li>
+                    <li>在弹出的确认框中，点击"添加"</li>
+                    <li>完成后，您可以通过主屏幕图标直接访问085757.cc</li>
+                    <li>如需全屏体验，可在"设置-全屏显示"中开启本应用的全屏模式</li>
+                </ul>
+                <img src="images/miui-add-to-home.png" alt="小米添加到桌面示意图" style="display: none;" id="miuiScreenshot">
+                <p style="margin-top: 15px; font-size: 14px; color: #666; font-style: italic;">提示：在MIUI系统中，请注意查看"更多"或"工具"菜单，不同版本的MIUI可能略有差异。</p>
+            </div>
+            
             <button class="add-to-home" id="confirmInstall">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -846,6 +864,9 @@
             const isAndroid = /Android/i.test(navigator.userAgent);
             const isChrome = /Chrome/i.test(navigator.userAgent) && !/Edge|Edg/i.test(navigator.userAgent);
             const isSafari = /Safari/i.test(navigator.userAgent) && !/Chrome/i.test(navigator.userAgent);
+            const isMiui = /MiuiBrowser/i.test(navigator.userAgent);
+            
+            console.log('设备检测:', {isAndroid, isChrome, isMiui, userAgent: navigator.userAgent});
             
             // 检查是否已安装PWA
             const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || 
@@ -854,17 +875,20 @@
             if (isInStandaloneMode) {
                 // 已经是PWA模式，隐藏按钮
                 addToHomeButton.style.display = 'none';
+                console.log('已处于独立模式，隐藏按钮');
                 return;
             }
             
-            // 对于安卓Chrome，总是显示按钮
-            if (isAndroid && isChrome) {
+            // 对于所有安卓设备，总是显示按钮
+            if (isAndroid) {
                 addToHomeButton.style.display = 'block';
+                console.log('安卓设备，显示按钮');
             }
             
             // 对于iOS Safari，总是显示按钮
             if (isIOS && isSafari) {
                 addToHomeButton.style.display = 'block';
+                console.log('iOS Safari，显示按钮');
             }
 
             // 为按钮添加点击事件
@@ -872,6 +896,14 @@
             
             function handleAddToHomeClick() {
                 console.log('添加到主屏幕按钮被点击');
+                
+                // 小米浏览器特殊处理
+                if (isMiui) {
+                    console.log('小米浏览器，显示MIUI特定说明');
+                    showInstallInstructions(false, true);
+                    return;
+                }
+                
                 if (deferredPrompt) {
                     console.log('存在安装提示，显示安装对话框');
                     // 显示安装提示
@@ -919,20 +951,26 @@
         });
         
         // 显示安装说明
-        function showInstallInstructions(isIOS) {
+        function showInstallInstructions(isIOS, isMiui = false) {
             const androidInstructions = document.getElementById('androidInstructions');
             const iosInstructions = document.getElementById('iosInstructions');
+            const miuiInstructions = document.getElementById('miuiInstructions');
             const iosInstallArrow = document.getElementById('iosInstallArrow');
+            
+            // 隐藏所有说明
+            androidInstructions.style.display = 'none';
+            iosInstructions.style.display = 'none';
+            if (miuiInstructions) miuiInstructions.style.display = 'none';
+            iosInstallArrow.style.display = 'none';
             
             // 根据设备类型显示不同的说明
             if (isIOS) {
-                androidInstructions.style.display = 'none';
                 iosInstructions.style.display = 'block';
                 iosInstallArrow.style.display = 'block'; // 显示iOS箭头提示
+            } else if (isMiui && miuiInstructions) {
+                miuiInstructions.style.display = 'block';
             } else {
                 androidInstructions.style.display = 'block';
-                iosInstructions.style.display = 'none';
-                iosInstallArrow.style.display = 'none'; // 隐藏iOS箭头提示
             }
             
             document.getElementById('installInstructions').style.display = 'flex';
