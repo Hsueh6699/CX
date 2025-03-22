@@ -16,6 +16,56 @@
 </head>
 
 <body>
+    <!-- iOS专用安装横幅 -->
+    <div class="ios-banner" id="iosBanner">
+        <div class="banner-content">
+            <div class="banner-icon">
+                <img src="images/logo.png" alt="安装图标">
+            </div>
+            <div class="banner-text">
+                <span>将彩旭国际娱乐添加到主屏幕</span>
+            </div>
+        </div>
+        <button id="iosInstallBtn" class="ios-install-btn">查看安装步骤</button>
+        <button id="closeIosBannerBtn" class="close-btn">×</button>
+    </div>
+
+    <!-- iOS安装教程弹窗 - 纯文字版 -->
+    <div id="iosTutorial" class="ios-tutorial">
+        <div class="tutorial-content">
+            <div class="tutorial-header">
+                <h2>如何添加到iPhone主屏幕</h2>
+                <span id="closeTutorialBtn" class="close-tutorial">&times;</span>
+            </div>
+            <div class="tutorial-steps text-only">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <p>前往iPhone上的Safari浏览器</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <p>前往要添加的网站(当前页面)</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <p>点击页面底部的"分享"按钮</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <p>向下滚动选项列表，然后点击"添加到主屏幕"</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <p>点击右上角的"添加"完成安装</p>
+                </div>
+            </div>
+            <div class="tutorial-footer">
+                <p>安装后，彩旭国际娱乐将显示在您的主屏幕上，像原生应用一样使用！</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通用安装横幅 -->
     <div class="install-banner" id="installBanner">
         <div class="banner-content">
             <div class="banner-icon">
@@ -29,28 +79,7 @@
         <button id="closeBannerBtn" class="close-btn">×</button>
     </div>
 
-    <div id="iosInstallModal" class="ios-install-modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2>添加到iOS主屏幕</h2>
-            <div class="ios-steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <p>点击页面底部的<img src="images/ios-share.png" alt="分享" class="ios-icon">分享按钮</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <p>在弹出的菜单中滚动并选择<img src="images/ios-add.png" alt="添加" class="ios-icon">添加到主屏幕</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <p>点击右上角的"添加"完成安装</p>
-                </div>
-            </div>
-            <div class="ios-note">安装后，彩旭国际娱乐将出现在您的主屏幕上，可以像原生应用一样使用！</div>
-        </div>
-    </div>
-
+    <!-- 主内容区域 -->
     <div class="container">
         <section id="home" class="hero">
             <div class="hero-image">
