@@ -715,3 +715,57 @@ footer {
     transform: scale(0);
     animation: bounce-in 0.5s forwards 1;
 }
+
+/* iOS悬浮安装按钮样式 */
+.ios-floating-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #007AFF, #5AC8FA);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    z-index: 100;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: float-in 0.5s forwards 1.5s;
+}
+
+.ios-floating-btn:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    transform: translateY(-3px);
+}
+
+.btn-icon {
+    font-size: 18px;
+    margin-right: 8px;
+}
+
+@keyframes float-in {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse-highlight {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(0, 122, 255, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 122, 255, 0);
+    }
+}

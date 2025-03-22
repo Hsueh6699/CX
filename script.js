@@ -93,15 +93,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const installBtn = document.getElementById('installBtn');
     const closeBannerBtn = document.getElementById('closeBannerBtn');
     const platformText = document.getElementById('platformText');
-    const iosInstallModal = document.getElementById('iosInstallModal');
 
     // iOS专用功能的变量
-    const iosBanner = document.getElementById('iosBanner');
-    const iosInstallBtn = document.getElementById('iosInstallBtn');
-    const closeIosBannerBtn = document.getElementById('closeIosBannerBtn');
+    const iosFloatingBtn = document.getElementById('iosFloatingBtn');
     const iosTutorial = document.getElementById('iosTutorial');
     const closeTutorialBtn = document.getElementById('closeTutorialBtn');
-    const iosInstallNav = document.getElementById('iosInstallNav');
 
     let deferredPrompt;
     let isIOS = false;
@@ -115,9 +111,6 @@ document.addEventListener('DOMContentLoaded', function () {
         // 检测iOS
         isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
 
-        // 检测Safari浏览器
-        const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
-
         // 检测Android
         isAndroid = /android/i.test(userAgent);
 
@@ -127,9 +120,6 @@ document.addEventListener('DOMContentLoaded', function () {
         // 根据平台更新文字
         if (isIOS) {
             platformText.textContent = "添加到iPhone主屏幕";
-            if (!isSafari) {
-                platformText.textContent += " (请使用Safari浏览器)";
-            }
         } else if (isAndroid) {
             platformText.textContent = "安装到Android设备";
         } else if (isChrome) {
@@ -150,34 +140,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // 处理iOS的安装指南
-    function showIOSInstallInstructions() {
-        // 显示iOS安装指南弹窗
-        iosInstallModal.style.display = "block";
-
-        // 添加关闭弹窗功能
-        const closeModal = document.querySelector('.close-modal');
-        closeModal.onclick = function () {
-            iosInstallModal.style.display = "none";
-        }
-
-        // 点击弹窗外部关闭
-        window.onclick = function (event) {
-            if (event.target == iosInstallModal) {
-                iosInstallModal.style.display = "none";
-            }
-        }
-    }
-
     // 显示安装Banner
     function showInstallBanner() {
-        detectPlatform();
         installBanner.classList.add('visible');
-    }
-
-    // 显示iOS专用Banner
-    function showIOSBanner() {
-        iosBanner.classList.add('visible');
     }
 
     // 显示iOS教程
@@ -209,21 +174,23 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // 处理iOS安装按钮点击
-    iosInstallBtn.addEventListener('click', () => {
-        showIOSTutorial();
-    });
+    // 处理iOS悬浮按钮点击
+    if (iosFloatingBtn) {
+        iosFloatingBtn.addEventListener('click', () => {
+            showIOSTutorial();
+
+            // 记录用户已点击过按钮
+            localStorage.setItem('iosButtonClicked', 'true');
+
+            // 移除脉冲动画
+            iosFloatingBtn.style.animation = 'none';
+        });
+    }
 
     // 关闭Banner按钮
     closeBannerBtn.addEventListener('click', () => {
         installBanner.classList.remove('visible');
         localStorage.setItem('installBannerClosed', 'true');
-    });
-
-    // 关闭iOS Banner按钮
-    closeIosBannerBtn.addEventListener('click', () => {
-        iosBanner.classList.remove('visible');
-        localStorage.setItem('iosBannerClosed', 'true');
     });
 
     // 关闭iOS教程按钮
@@ -238,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // 检查是否应该显示Banner或导航按钮
+    // 检查是否应该显示安装提示
     function checkShowInstallPrompts() {
         detectPlatform();
 
@@ -247,15 +214,23 @@ document.addEventListener('DOMContentLoaded', function () {
             window.navigator.standalone === true;
 
         if (isAppInstalled) {
-            // 已安装，不显示任何提示
+            // 已安装，隐藏所有安装提示
+            if (iosFloatingBtn) iosFloatingBtn.style.display = 'none';
             return;
         }
 
         setTimeout(() => {
             if (isIOS) {
-                // iOS设备显示导航按钮
-                if (iosInstallNav && localStorage.getItem('iosInstallNavClosed') !== 'true') {
-                    iosInstallNav.style.display = 'flex';
+                // iOS设备显示悬浮按钮
+                if (iosFloatingBtn) {
+                    iosFloatingBtn.style.display = 'flex';
+
+                    // 如果用户从未点击过按钮，添加脉冲动画以吸引注意
+                    if (localStorage.getItem('iosButtonClicked') !== 'true') {
+                        setTimeout(() => {
+                            iosFloatingBtn.style.animation = 'float-in 0.5s forwards, pulse-highlight 2s infinite 0.5s';
+                        }, 2000);
+                    }
                 }
             } else if ((isAndroid || isChrome) && deferredPrompt) {
                 // Android或Chrome显示标准安装横幅
@@ -268,12 +243,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 启动检查
     checkShowInstallPrompts();
-
-    // 检测如果是iOS设备，添加特殊元素
-    detectPlatform();
-    if (isIOS) {
-        addIOSSpecificElements();
-    }
 });
 
 // 特殊处理iOS用户访问
