@@ -1,84 +1,21 @@
 {
-  "name": "彩旭娱乐",
-  "short_name": "彩旭娱乐",
-  "description": "彩旭娱乐 - 提供优质在线服务",
-  "start_url": "./index.html?source=pwa",
-  "display": "standalone",
-  "background_color": "#0a1529",
-  "theme_color": "#0a1529",
-  "orientation": "portrait",
-  "prefer_related_applications": false,
-  "related_applications": [],
-  "scope": "./",
-  "categories": [
-    "entertainment",
-    "gaming"
-  ],
-  "dir": "auto",
-  "lang": "zh-CN",
-  "iarc_rating_id": "",
-  "shortcuts": [
-    {
-      "name": "进入官网",
-      "short_name": "官网",
-      "description": "直接进入官网体验",
-      "url": "https://www.xucai666.com/?code=17p/#/home",
-      "icons": [
+    "name": "彩旭国际娱乐",
+    "short_name": "彩旭",
+    "description": "彩旭国际娱乐官方应用",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#000000",
+    "icons": [
         {
-          "src": "images/icon-96x96.png",
-          "sizes": "96x96"
-        }
-      ]
-    },
-    {
-      "name": "立即注册",
-      "short_name": "注册",
-      "description": "快速注册账号",
-      "url": "https://www.xucai666.com/?code=17p/#/register",
-      "icons": [
+            "src": "images/logo.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
         {
-          "src": "images/icon-96x96.png",
-          "sizes": "96x96"
+            "src": "images/logo.png",
+            "sizes": "512x512",
+            "type": "image/png"
         }
-      ]
-    }
-  ],
-  "icons": [
-    {
-      "src": "images/icon-48x48.png",
-      "sizes": "48x48",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "images/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "images/icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "images/icon-128x128.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "images/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "images/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ]
+    ]
 }
