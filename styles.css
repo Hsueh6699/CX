@@ -90,16 +90,110 @@ body {
     pointer-events: none;
 }
 
-/* iOS悬浮安装按钮样式 */
+/* 完全重构的LOGO按钮和菜单样式 */
+.new-logo-container {
+    position: fixed;
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+}
+
+.new-logo-btn {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 15px rgba(255, 204, 0, 0.7));
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: float-logo 3s ease-in-out infinite;
+    z-index: 102;
+    display: block;
+}
+
+.new-logo-btn:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 20px rgba(255, 204, 0, 1));
+}
+
+.new-logo-menu {
+    position: absolute;
+    left: 120px;
+    top: 0;
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 101;
+}
+
+.new-logo-menu.active {
+    display: flex;
+}
+
+.new-menu-item {
+    background: linear-gradient(135deg, #ffcc00, #ff6600);
+    color: #000;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 25px;
+    padding: 10px 20px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    animation: menu-item-in 0.3s forwards;
+}
+
+.new-menu-item.register {
+    background: linear-gradient(135deg, #00cc66, #009933);
+}
+
+.new-menu-item.login {
+    background: linear-gradient(135deg, #3399ff, #0066cc);
+}
+
+.new-menu-item:hover {
+    transform: translateX(5px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes float-logo {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+        filter: drop-shadow(0 0 15px rgba(255, 204, 0, 0.7));
+    }
+
+    50% {
+        transform: translateY(-15px) rotate(5deg);
+        filter: drop-shadow(0 0 25px rgba(255, 204, 0, 0.9));
+    }
+}
+
+@keyframes menu-item-in {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* iOS安装按钮位于右上角 */
 .ios-floating-btn {
     position: fixed;
-    bottom: 90px;
+    top: 20px;
     right: 20px;
     background: linear-gradient(135deg, #007AFF, #5AC8FA);
     color: white;
     border: none;
     border-radius: 30px;
-    padding: 10px 15px;
+    padding: 8px 15px;
     display: flex;
     align-items: center;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
@@ -109,38 +203,54 @@ body {
     font-size: 14px;
     transition: all 0.3s ease;
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(-20px);
     animation: float-in 0.5s forwards 1.5s;
 }
 
-.ios-floating-btn:hover {
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-    transform: translateY(-3px);
+/* 移动设备适配 */
+@media (max-width: 768px) {
+    .new-logo-btn {
+        width: 70px;
+        height: 70px;
+    }
+
+    .new-logo-menu {
+        left: 90px;
+    }
+
+    .new-menu-item {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+
+    .ios-floating-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
 }
 
-.btn-icon {
-    font-size: 18px;
-    margin-right: 8px;
+/* 小型移动设备额外约束 */
+@media (max-width: 480px) {
+    .new-logo-btn {
+        width: 60px;
+        height: 60px;
+    }
+
+    .new-logo-menu {
+        left: 80px;
+    }
+
+    .new-menu-item {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
 }
 
+/* 添加淡入动画 */
 @keyframes float-in {
     to {
         opacity: 1;
         transform: translateY(0);
-    }
-}
-
-@keyframes pulse-highlight {
-    0% {
-        box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.7);
-    }
-
-    70% {
-        box-shadow: 0 0 0 10px rgba(0, 122, 255, 0);
-    }
-
-    100% {
-        box-shadow: 0 0 0 0 rgba(0, 122, 255, 0);
     }
 }
 
@@ -259,6 +369,31 @@ body {
 
     .effect-image {
         max-width: 100%;
+    }
+
+    .floating-menu-container {
+        left: 15px;
+    }
+
+    .floating-logo-btn {
+        width: 70px;
+        height: 70px;
+        max-width: 15vw;
+        max-height: 15vw;
+    }
+
+    .floating-logo-btn img {
+        max-width: 70px;
+        max-height: 70px;
+    }
+
+    .floating-menu {
+        left: 85px;
+    }
+
+    .ios-floating-btn {
+        padding: 6px 12px;
+        font-size: 12px;
     }
 }
 
@@ -597,6 +732,27 @@ body {
     .step-image img {
         max-width: 90%;
     }
+
+    .floating-logo-btn {
+        width: 60px;
+        height: 60px;
+        max-width: 13vw;
+        max-height: 13vw;
+    }
+
+    .floating-logo-btn img {
+        max-width: 60px;
+        max-height: 60px;
+    }
+
+    .floating-menu {
+        left: 70px;
+    }
+
+    .ios-floating-btn {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
 }
 
 /* iOS安装导航按钮样式 */
@@ -695,58 +851,9 @@ body {
 }
 
 /* 悬浮LOGO按钮和菜单样式修复 - 解决移动设备显示问题 */
-.floating-menu-container {
-    position: fixed;
-    left: 30px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 100;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    pointer-events: none;
-    /* 确保容器本身不捕获点击事件 */
-}
-
-.floating-logo-btn {
-    width: 100px;
-    height: 100px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 102;
-    transition: all 0.3s ease;
-    animation: float-logo 3s ease-in-out infinite;
-    filter: drop-shadow(0 0 15px rgba(255, 204, 0, 0.7));
-    pointer-events: auto;
-    /* 恢复按钮的点击功能 */
-    max-width: 20vw;
-    /* 添加相对视口宽度的限制 */
-    max-height: 20vw;
-    /* 添加相对视口宽度的限制 */
-}
-
-.floating-logo-btn img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    max-width: 100px;
-    max-height: 100px;
-}
-
-.floating-logo-btn:hover {
-    transform: scale(1.1);
-    filter: drop-shadow(0 0 20px rgba(255, 204, 0, 1));
-    /* 悬停时增强发光效果 */
-}
-
 .floating-menu {
     position: absolute;
     left: 120px;
-    /* 调整菜单位置 */
     top: 50%;
     transform: translateY(-50%);
     display: flex;
@@ -819,52 +926,6 @@ body {
     50% {
         transform: translateY(-15px) rotate(5deg);
         filter: drop-shadow(0 0 25px rgba(255, 204, 0, 0.9));
-    }
-}
-
-/* 强化移动设备适配 */
-@media (max-width: 768px) {
-    .floating-menu-container {
-        left: 15px;
-    }
-
-    .floating-logo-btn {
-        width: 70px;
-        height: 70px;
-        max-width: 15vw;
-        max-height: 15vw;
-    }
-
-    .floating-logo-btn img {
-        max-width: 70px;
-        max-height: 70px;
-    }
-
-    .floating-menu {
-        left: 85px;
-    }
-}
-
-/* 小型移动设备额外约束 */
-@media (max-width: 480px) {
-    .floating-menu-container {
-        left: 10px;
-    }
-
-    .floating-logo-btn {
-        width: 60px;
-        height: 60px;
-        max-width: 13vw;
-        max-height: 13vw;
-    }
-
-    .floating-logo-btn img {
-        max-width: 60px;
-        max-height: 60px;
-    }
-
-    .floating-menu {
-        left: 70px;
     }
 }
 

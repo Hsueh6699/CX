@@ -99,6 +99,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const iosTutorial = document.getElementById('iosTutorial');
     const closeTutorialBtn = document.getElementById('closeTutorialBtn');
 
+    const floatingLogoBtn = document.getElementById('floatingLogoBtn');
+    const floatingMenu = document.getElementById('floatingMenu');
+
     let deferredPrompt;
     let isIOS = false;
     let isAndroid = false;
@@ -118,14 +121,16 @@ document.addEventListener('DOMContentLoaded', function () {
         isChrome = /chrome/i.test(userAgent) && !/edge/i.test(userAgent);
 
         // 根据平台更新文字
-        if (isIOS) {
-            platformText.textContent = "添加到iPhone主屏幕";
-        } else if (isAndroid) {
-            platformText.textContent = "安装到Android设备";
-        } else if (isChrome) {
-            platformText.textContent = "安装到Chrome浏览器";
-        } else {
-            platformText.textContent = "添加到您的设备";
+        if (platformText) {
+            if (isIOS) {
+                platformText.textContent = "添加到iPhone主屏幕";
+            } else if (isAndroid) {
+                platformText.textContent = "安装到Android设备";
+            } else if (isChrome) {
+                platformText.textContent = "安装到Chrome浏览器";
+            } else {
+                platformText.textContent = "添加到您的设备";
+            }
         }
     }
 
@@ -140,70 +145,140 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // 修复: LOGO按钮点击事件
+    if (floatingLogoBtn && floatingMenu) {
+        console.log("设置LOGO按钮点击事件");
+
+        // 清除可能导致问题的pointer-events样式
+        document.querySelector('.floating-menu-container').style.pointerEvents = 'auto';
+
+        floatingLogoBtn.addEventListener('click', function (e) {
+            console.log("LOGO按钮被点击");
+            e.stopPropagation(); // 阻止事件冒泡
+
+            floatingMenu.classList.toggle('active');
+
+            // 添加活跃状态的动画
+            if (floatingMenu.classList.contains('active')) {
+                floatingLogoBtn.style.animation = 'none';
+                setTimeout(() => {
+                    floatingLogoBtn.style.animation = 'float-logo 3s ease-in-out infinite';
+                }, 10);
+            }
+        });
+
+        // 点击页面其他区域关闭菜单
+        document.addEventListener('click', function (event) {
+            if (floatingMenu.classList.contains('active') &&
+                !floatingMenu.contains(event.target) &&
+                !floatingLogoBtn.contains(event.target)) {
+                floatingMenu.classList.remove('active');
+            }
+        });
+    } else {
+        console.log("未找到LOGO按钮或菜单元素");
+    }
+
     // 显示安装Banner
     function showInstallBanner() {
-        installBanner.classList.add('visible');
+        if (installBanner) {
+            installBanner.classList.add('visible');
+        }
     }
 
     // 显示iOS教程
     function showIOSTutorial() {
-        iosTutorial.style.display = 'block';
+        if (iosTutorial) {
+            iosTutorial.style.display = 'block';
 
-        // 禁止背景滚动
-        document.body.style.overflow = 'hidden';
+            // 禁止背景滚动
+            document.body.style.overflow = 'hidden';
+        }
     }
 
     // 关闭iOS教程
     function closeIOSTutorial() {
-        iosTutorial.style.display = 'none';
+        if (iosTutorial) {
+            iosTutorial.style.display = 'none';
 
-        // 恢复背景滚动
-        document.body.style.overflow = '';
+            // 恢复背景滚动
+            document.body.style.overflow = '';
+        }
     }
 
     // 处理安装按钮点击
-    installBtn.addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            console.log(`用户安装结果: ${outcome}`);
-            deferredPrompt = null;
-            installBanner.classList.remove('visible');
-        } else {
-            alert('请使用支持安装功能的浏览器');
-        }
-    });
+    if (installBtn) {
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`用户安装结果: ${outcome}`);
+                deferredPrompt = null;
+                installBanner.classList.remove('visible');
+            } else {
+                alert('请使用支持安装功能的浏览器');
+            }
+        });
+    }
 
-    // 处理iOS悬浮按钮点击
+    // 处理iOS安装按钮点击
     if (iosFloatingBtn) {
         iosFloatingBtn.addEventListener('click', () => {
             showIOSTutorial();
-
-            // 记录用户已点击过按钮
-            localStorage.setItem('iosButtonClicked', 'true');
-
-            // 移除脉冲动画
-            iosFloatingBtn.style.animation = 'none';
         });
     }
 
     // 关闭Banner按钮
-    closeBannerBtn.addEventListener('click', () => {
-        installBanner.classList.remove('visible');
-        localStorage.setItem('installBannerClosed', 'true');
-    });
+    if (closeBannerBtn) {
+        closeBannerBtn.addEventListener('click', () => {
+            installBanner.classList.remove('visible');
+            localStorage.setItem('installBannerClosed', 'true');
+        });
+    }
 
     // 关闭iOS教程按钮
-    closeTutorialBtn.addEventListener('click', () => {
-        closeIOSTutorial();
-    });
+    if (closeTutorialBtn) {
+        closeTutorialBtn.addEventListener('click', () => {
+            closeIOSTutorial();
+        });
+    }
 
     // 点击教程外部关闭
-    iosTutorial.addEventListener('click', (e) => {
-        if (e.target === iosTutorial) {
-            closeIOSTutorial();
+    if (iosTutorial) {
+        iosTutorial.addEventListener('click', (e) => {
+            if (e.target === iosTutorial) {
+                closeIOSTutorial();
+            }
+        });
+    }
+
+    // 调整LOGO尺寸函数
+    function adjustLogoSize() {
+        if (!floatingLogoBtn || !floatingLogoBtn.querySelector('img')) return;
+
+        const logoImg = floatingLogoBtn.querySelector('img');
+
+        // 获取视口宽度
+        const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+
+        // 根据视口宽度调整LOGO尺寸
+        if (vw <= 480) {
+            floatingLogoBtn.style.width = '60px';
+            floatingLogoBtn.style.height = '60px';
+            logoImg.style.maxWidth = '60px';
+            logoImg.style.maxHeight = '60px';
+        } else if (vw <= 768) {
+            floatingLogoBtn.style.width = '70px';
+            floatingLogoBtn.style.height = '70px';
+            logoImg.style.maxWidth = '70px';
+            logoImg.style.maxHeight = '70px';
+        } else {
+            floatingLogoBtn.style.width = '100px';
+            floatingLogoBtn.style.height = '100px';
+            logoImg.style.maxWidth = '100px';
+            logoImg.style.maxHeight = '100px';
         }
-    });
+    }
 
     // 检查是否应该显示安装提示
     function checkShowInstallPrompts() {
@@ -221,16 +296,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         setTimeout(() => {
             if (isIOS) {
-                // iOS设备显示悬浮按钮
-                if (iosFloatingBtn) {
+                // iOS设备显示右上角安装按钮
+                if (iosFloatingBtn && localStorage.getItem('iosButtonClicked') !== 'true') {
                     iosFloatingBtn.style.display = 'flex';
-
-                    // 如果用户从未点击过按钮，添加脉冲动画以吸引注意
-                    if (localStorage.getItem('iosButtonClicked') !== 'true') {
-                        setTimeout(() => {
-                            iosFloatingBtn.style.animation = 'float-in 0.5s forwards, pulse-highlight 2s infinite 0.5s';
-                        }, 2000);
-                    }
                 }
             } else if ((isAndroid || isChrome) && deferredPrompt) {
                 // Android或Chrome显示标准安装横幅
@@ -240,6 +308,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }, 2000);
     }
+
+    // 初始调整
+    adjustLogoSize();
+
+    // 当视口尺寸改变时重新调整
+    window.addEventListener('resize', adjustLogoSize);
 
     // 启动检查
     checkShowInstallPrompts();
@@ -336,4 +410,104 @@ document.addEventListener('DOMContentLoaded', function () {
     // 启动现有功能检查
     // checkShowInstallPrompts();
     // 其他现有代码...
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    // 为新的LOGO按钮添加点击事件
+    const newLogoBtn = document.getElementById('newLogoBtn');
+    const newLogoMenu = document.getElementById('newLogoMenu');
+
+    if (newLogoBtn && newLogoMenu) {
+        // 直接使用onclick属性绑定事件 - 最直接的方式
+        newLogoBtn.onclick = function () {
+            newLogoMenu.classList.toggle('active');
+        };
+
+        // 点击其他区域关闭菜单
+        document.addEventListener('click', function (event) {
+            if (event.target !== newLogoBtn && !newLogoMenu.contains(event.target)) {
+                newLogoMenu.classList.remove('active');
+            }
+        });
+    } else {
+        console.error('未找到LOGO按钮或菜单元素');
+    }
+
+    // iOS安装按钮功能
+    const iosFloatingBtn = document.getElementById('iosFloatingBtn');
+    const iosTutorial = document.getElementById('iosTutorial');
+    const closeTutorialBtn = document.getElementById('closeTutorialBtn');
+
+    // 检测是否是iOS设备
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+    // 根据设备显示相应按钮
+    if (isIOS && iosFloatingBtn) {
+        iosFloatingBtn.style.display = 'flex';
+    }
+
+    // iOS安装按钮点击事件
+    if (iosFloatingBtn && iosTutorial) {
+        iosFloatingBtn.onclick = function () {
+            iosTutorial.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        };
+    }
+
+    // 关闭教程
+    if (closeTutorialBtn && iosTutorial) {
+        closeTutorialBtn.onclick = function () {
+            iosTutorial.style.display = 'none';
+            document.body.style.overflow = '';
+        };
+
+        // 点击外部关闭
+        iosTutorial.addEventListener('click', function (event) {
+            if (event.target === iosTutorial) {
+                iosTutorial.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        });
+    }
+
+    // Android安装横幅功能
+    const installBanner = document.getElementById('installBanner');
+    const installBtn = document.getElementById('installBtn');
+    const closeBannerBtn = document.getElementById('closeBannerBtn');
+    let deferredPrompt;
+
+    // 监听安装事件
+    window.addEventListener('beforeinstallprompt', function (e) {
+        e.preventDefault();
+        deferredPrompt = e;
+
+        // 只有非iOS设备才显示此横幅
+        if (!isIOS && installBanner) {
+            installBanner.classList.add('visible');
+        }
+    });
+
+    // 安装按钮点击
+    if (installBtn) {
+        installBtn.onclick = async function () {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`用户安装结果: ${outcome}`);
+                deferredPrompt = null;
+
+                if (installBanner) {
+                    installBanner.classList.remove('visible');
+                }
+            }
+        };
+    }
+
+    // 关闭横幅
+    if (closeBannerBtn && installBanner) {
+        closeBannerBtn.onclick = function () {
+            installBanner.classList.remove('visible');
+            localStorage.setItem('installBannerClosed', 'true');
+        };
+    }
 }); 

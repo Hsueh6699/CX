@@ -19,26 +19,19 @@
 </head>
 
 <body>
-    <!-- 悬浮LOGO按钮和菜单 -->
-    <div class="floating-menu-container">
-        <button id="floatingLogoBtn" class="floating-logo-btn">
-            <img src="images/logo.png" alt="彩旭国际娱乐">
-        </button>
+    <!-- 完全重构的LOGO按钮和菜单 -->
+    <div id="newLogoContainer" class="new-logo-container">
+        <img id="newLogoBtn" class="new-logo-btn" src="images/logo.png" alt="彩旭国际娱乐">
 
-        <div id="floatingMenu" class="floating-menu">
-            <a href="https://www.xucai666.com/?code=17p/#/home" class="menu-btn" target="_blank">
-                <span class="btn-text">官网</span>
-            </a>
-            <a href="https://www.xucai666.com/?code=17p/#/register" class="menu-btn register-btn" target="_blank">
-                <span class="btn-text">立即注册</span>
-            </a>
-            <a href="https://www.xucai666.com/?code=17p/#/login" class="menu-btn login-btn" target="_blank">
-                <span class="btn-text">立即登录</span>
-            </a>
+        <div id="newLogoMenu" class="new-logo-menu">
+            <a href="https://www.xucai666.com/?code=17p/#/home" class="new-menu-item" target="_blank">官网</a>
+            <a href="https://www.xucai666.com/?code=17p/#/register" class="new-menu-item register"
+                target="_blank">立即注册</a>
+            <a href="https://www.xucai666.com/?code=17p/#/login" class="new-menu-item login" target="_blank">立即登录</a>
         </div>
     </div>
 
-    <!-- iOS悬浮安装按钮 -->
+    <!-- iOS悬浮安装按钮 - 右上角 -->
     <button id="iosFloatingBtn" class="ios-floating-btn">
         <span class="btn-icon">+</span>
         <span class="btn-text">添加到主屏幕</span>
