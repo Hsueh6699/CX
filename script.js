@@ -262,4 +262,40 @@ function addIOSSpecificElements() {
             arrowIndicator.classList.toggle('blink');
         }, 2000);
     }
-} 
+}
+
+// 添加悬浮LOGO按钮和菜单功能
+document.addEventListener('DOMContentLoaded', function () {
+    // 现有变量和函数保持不变
+    // ...
+
+    // 悬浮LOGO和菜单功能
+    const floatingLogoBtn = document.getElementById('floatingLogoBtn');
+    const floatingMenu = document.getElementById('floatingMenu');
+
+    // LOGO按钮点击事件
+    if (floatingLogoBtn && floatingMenu) {
+        floatingLogoBtn.addEventListener('click', function () {
+            floatingMenu.classList.toggle('active');
+
+            // 添加活跃状态的动画
+            if (floatingMenu.classList.contains('active')) {
+                floatingLogoBtn.style.animation = 'none';
+                setTimeout(() => {
+                    floatingLogoBtn.style.animation = 'float-logo 3s ease-in-out infinite';
+                }, 10);
+            }
+        });
+
+        // 点击页面其他区域关闭菜单
+        document.addEventListener('click', function (event) {
+            if (!floatingMenu.contains(event.target) && !floatingLogoBtn.contains(event.target)) {
+                floatingMenu.classList.remove('active');
+            }
+        });
+    }
+
+    // 启动现有功能检查
+    // checkShowInstallPrompts();
+    // 其他现有代码...
+}); 

@@ -16,6 +16,25 @@
 </head>
 
 <body>
+    <!-- 悬浮LOGO按钮和菜单 -->
+    <div class="floating-menu-container">
+        <button id="floatingLogoBtn" class="floating-logo-btn">
+            <img src="images/logo.png" alt="彩旭国际娱乐">
+        </button>
+
+        <div id="floatingMenu" class="floating-menu">
+            <a href="https://www.xucai666.com/?code=17p/#/home" class="menu-btn" target="_blank">
+                <span class="btn-text">官网</span>
+            </a>
+            <a href="https://www.xucai666.com/?code=17p/#/register" class="menu-btn register-btn" target="_blank">
+                <span class="btn-text">立即注册</span>
+            </a>
+            <a href="https://www.xucai666.com/?code=17p/#/login" class="menu-btn login-btn" target="_blank">
+                <span class="btn-text">立即登录</span>
+            </a>
+        </div>
+    </div>
+
     <!-- iOS悬浮安装按钮 -->
     <button id="iosFloatingBtn" class="ios-floating-btn">
         <span class="btn-icon">+</span>
@@ -72,14 +91,11 @@
     </div>
 
     <!-- 主内容区域 -->
-    <div class="container">
+    <div class="container full-height">
         <section id="home" class="hero">
             <div class="hero-image">
                 <img src="images/main-image.png" alt="彩旭国际娱乐" class="effect-image">
-                <div class="overlay">
-                    <h1 class="floating-text">彩旭国际娱乐</h1>
-                    <div class="floating-particles"></div>
-                </div>
+                <div class="floating-particles"></div>
             </div>
         </section>
     </div>
