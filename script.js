@@ -93,6 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const installBtn = document.getElementById('installBtn');
     const closeBannerBtn = document.getElementById('closeBannerBtn');
     const platformText = document.getElementById('platformText');
+    const iosInstallModal = document.getElementById('iosInstallModal');
 
     let deferredPrompt;
     let isIOS = false;
@@ -106,6 +107,9 @@ document.addEventListener('DOMContentLoaded', function () {
         // 检测iOS
         isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
 
+        // 检测Safari浏览器
+        const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
+
         // 检测Android
         isAndroid = /android/i.test(userAgent);
 
@@ -114,7 +118,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // 根据平台更新文字
         if (isIOS) {
-            platformText.textContent = "安装到iPhone主屏幕";
+            platformText.textContent = "添加到iPhone主屏幕";
+            if (!isSafari) {
+                platformText.textContent += " (请使用Safari浏览器)";
+            }
         } else if (isAndroid) {
             platformText.textContent = "安装到Android设备";
         } else if (isChrome) {
@@ -124,20 +131,30 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // 监听beforeinstallprompt事件，这个事件会在Chrome和Android上触发
+    // 监听beforeinstallprompt事件
     window.addEventListener('beforeinstallprompt', (e) => {
-        // 阻止Chrome自动显示安装提示
         e.preventDefault();
-        // 保存事件，稍后使用
         deferredPrompt = e;
-        // 显示我们的自定义安装Banner
         showInstallBanner();
     });
 
     // 处理iOS的安装指南
     function showIOSInstallInstructions() {
-        // 对于iOS，我们需要显示自定义指南
-        alert('添加到主屏幕步骤：\n1. 点击浏览器底部的"分享"按钮\n2. 在弹出菜单中选择"添加到主屏幕"');
+        // 显示iOS安装指南弹窗
+        iosInstallModal.style.display = "block";
+
+        // 添加关闭弹窗功能
+        const closeModal = document.querySelector('.close-modal');
+        closeModal.onclick = function () {
+            iosInstallModal.style.display = "none";
+        }
+
+        // 点击弹窗外部关闭
+        window.onclick = function (event) {
+            if (event.target == iosInstallModal) {
+                iosInstallModal.style.display = "none";
+            }
+        }
     }
 
     // 显示安装Banner
@@ -162,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
             installBanner.classList.remove('visible');
         } else {
             // 如果没有安装提示但用户点击了安装按钮
-            alert('请使用Chrome或Safari浏览器以启用安装功能');
+            alert('请使用支持安装功能的浏览器（Chrome、Safari）');
         }
     });
 
@@ -187,15 +204,56 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        // 检测是否是iOS并且是Safari浏览器，因为只有Safari支持添加到主屏幕
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        const isIOSSafari = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream &&
+            /^((?!chrome|android).)*safari/i.test(userAgent);
+
         // 延迟显示Banner，给用户一些时间先看内容
         setTimeout(() => {
             detectPlatform();
+
+            // 即使在iOS上也显示Banner，但会提供特殊的安装指南
             if (isIOS || isAndroid || isChrome) {
                 showInstallBanner();
+
+                // 如果是iOS设备且使用Safari，可以选择自动显示安装指南
+                if (isIOSSafari && !localStorage.getItem('iosInstructionsShown')) {
+                    // 延迟一点再显示安装指南，让用户先注意到Banner
+                    setTimeout(() => {
+                        showIOSInstallInstructions();
+                        localStorage.setItem('iosInstructionsShown', 'true');
+                    }, 2000);
+                }
             }
         }, 3000);
     }
 
+    // 特殊处理iOS用户访问
+    function addIOSSpecificElements() {
+        if (!isIOS) return;
+
+        // 添加在iOS Safari上的特殊提示
+        if (navigator.standalone !== true) {
+            // 添加顶部指示箭头指向分享按钮（在某些iOS版本中）
+            const arrowIndicator = document.createElement('div');
+            arrowIndicator.className = 'ios-arrow-indicator';
+            arrowIndicator.innerHTML = '👇 点击这里添加到主屏幕';
+            document.body.appendChild(arrowIndicator);
+
+            // 周期性闪烁提示，提醒用户操作
+            setInterval(() => {
+                arrowIndicator.classList.toggle('blink');
+            }, 2000);
+        }
+    }
+
     // 启动检查
     checkShowBanner();
+
+    // 检测如果是iOS设备，添加特殊元素
+    detectPlatform();
+    if (isIOS) {
+        addIOSSpecificElements();
+    }
 }); 
