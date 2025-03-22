@@ -1,21 +1,23 @@
 {
-  "name": "彩旭国际娱乐",
-  "short_name": "彩旭国际",
-  "description": "彩旭国际娱乐 - 官方网站，提供优质的在线娱乐体验",
-  "start_url": "https://www.xucai666.com",
+  "name": "在线娱乐平台",
+  "short_name": "085757.cc",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
+  "background_color": "#0a1529",
+  "theme_color": "#0a1529",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "./images/CXLOGO.png",
+      "src": "images/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "./images/CXLOGO.png",
+      "src": "images/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 } 

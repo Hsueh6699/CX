@@ -603,6 +603,14 @@
                 max-width: 280px;
             }
         }
+        
+        .install-steps img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid #eee;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
@@ -618,11 +626,13 @@
             <div class="install-title">如何添加到主屏幕</div>
             <div id="androidInstructions">
                 <ul class="install-steps">
-                    <li>点击浏览器菜单按钮 (⋮)</li>
-                    <li>选择"添加到主屏幕"或"安装应用"</li>
-                    <li>确认添加</li>
+                    <li>点击浏览器右上角的菜单按钮 (⋮)</li>
+                    <li>在弹出菜单中选择"安装应用"或"添加到主屏幕"选项</li>
+                    <li>如果没有直接看到安装选项，可能需要点击"添加到主屏幕"后再选择"安装"</li>
+                    <li>在弹出的确认窗口中点击"安装"</li>
                     <li>完成后，您可以通过主屏幕图标直接访问085757.cc</li>
                 </ul>
+                <p style="margin-top: 15px; font-size: 14px; color: #666; font-style: italic;">提示：不同版本的Chrome可能有略微不同的界面，如果无法找到"安装"选项，请尝试在Chrome地址栏右侧查找"安装"图标。</p>
             </div>
             <div id="iosInstructions" style="display: none;">
                 <ul class="install-steps">
@@ -735,20 +745,59 @@
             const isChrome = /Chrome/i.test(navigator.userAgent) && !/Edge|Edg/i.test(navigator.userAgent);
             const isSafari = /Safari/i.test(navigator.userAgent) && !/Chrome/i.test(navigator.userAgent);
             
-            // 如果是iOS或安卓/Chrome设备，显示按钮
-            if (isIOS || isAndroid || isChrome) {
+            // 检查是否已安装PWA
+            const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || 
+                                      window.navigator.standalone === true;
+            
+            if (isInStandaloneMode) {
+                // 已经是PWA模式，隐藏按钮
+                addToHomeButton.style.display = 'none';
+                return;
+            }
+            
+            // 检查是否支持PWA安装
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                // 阻止Chrome 67及更早版本自动显示安装提示
+                e.preventDefault();
+                // 存储事件以稍后触发
+                deferredPrompt = e;
+                // 显示安装按钮
+                addToHomeButton.style.display = 'block';
+                
+                // 添加点击事件处理
+                addToHomeButton.addEventListener('click', (e) => {
+                    if (deferredPrompt) {
+                        // 针对支持原生安装的浏览器，直接触发安装提示
+                        deferredPrompt.prompt();
+                        
+                        // 等待用户响应安装提示
+                        deferredPrompt.userChoice.then((choiceResult) => {
+                            if (choiceResult.outcome === 'accepted') {
+                                console.log('用户接受安装');
+                            } else {
+                                console.log('用户取消安装');
+                                // 用户拒绝后显示手动安装说明
+                                showInstallInstructions(isIOS);
+                            }
+                            deferredPrompt = null;
+                        });
+                    } else {
+                        // 对于不支持原生安装提示的浏览器，显示安装指引
+                        showInstallInstructions(isIOS);
+                    }
+                });
+                return;
+            });
+            
+            // 如果没有触发beforeinstallprompt事件但设备可能支持PWA
+            if ((isIOS && isSafari) || (isAndroid && isChrome)) {
                 addToHomeButton.style.display = 'block';
                 
                 // 添加点击事件
                 addToHomeButton.addEventListener('click', function() {
                     showInstallInstructions(isIOS);
                 });
-            }
-            
-            // 如果是从主屏幕打开的，不显示按钮
-            if (window.matchMedia('(display-mode: standalone)').matches || 
-                window.navigator.standalone === true) {
-                addToHomeButton.style.display = 'none';
             }
         }
         
