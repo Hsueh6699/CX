@@ -1,6 +1,7 @@
 {
   "name": "在线娱乐平台",
   "short_name": "085757.cc",
+  "description": "在线娱乐平台 - 提供优质在线服务",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0a1529",
