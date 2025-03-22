@@ -14,12 +14,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="images/icon-152x152.png">
     <link rel="apple-touch-icon" sizes="180x180" href="images/icon-180x180.png">
     <link rel="apple-touch-icon" sizes="167x167" href="images/icon-167x167.png">
-    <meta name="description" content="在线娱乐平台 - 提供优质在线服务">
-    <meta name="keywords" content="在线娱乐,在线平台,085757.cc">
-    <meta name="author" content="085757.cc">
-    <meta property="og:title" content="在线娱乐平台">
-    <meta property="og:description" content="在线娱乐平台 - 提供多条线路服务">
-    <meta property="og:url" content="https://085757.cc">
+    
     <style>
         * {
             margin: 0;
@@ -55,6 +50,7 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.8);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 9999;
@@ -69,6 +65,7 @@
         .loading-text {
             color: white;
             font-size: 20px;
+            margin-top: 15px;
         }
         
         .loading-spinner {
@@ -78,7 +75,6 @@
             border-radius: 50%;
             border-top-color: #ffb700;
             animation: spin 1s ease-in-out infinite;
-            margin-bottom: 15px;
         }
         
         @keyframes spin {
@@ -92,295 +88,9 @@
             padding: 20px 0;
         }
         
-        .main-image-container {
-            position: relative;
-            margin: 15px 0 45px;
-            padding: 10px;
-        }
-        
-        .main-image {
-            position: relative;
-            overflow: hidden;
-            border-radius: 12px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 0, 0, 0.3);
-            transition: all 0.5s ease;
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0% {
-                transform: translateY(0px);
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 0, 0, 0.3);
-            }
-            50% {
-                transform: translateY(-15px);
-                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 0 40px rgba(247, 151, 30, 0.2);
-            }
-            100% {
-                transform: translateY(0px);
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 0, 0, 0.3);
-            }
-        }
-        
-        .glow-effect {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            background: radial-gradient(circle at center, rgba(247, 151, 30, 0.2) 0%, rgba(247, 151, 30, 0) 70%);
-            z-index: -1;
-            animation: glow 6s ease-in-out infinite;
-        }
-        
-        @keyframes glow {
-            0% {
-                opacity: 0.5;
-                transform: scale(0.9);
-            }
-            50% {
-                opacity: 0.9;
-                transform: scale(1.1);
-            }
-            100% {
-                opacity: 0.5;
-                transform: scale(0.9);
-            }
-        }
-        
-        .main-image::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, rgba(255,210,0,0.2), rgba(255,100,0,0));
-            z-index: 1;
-            pointer-events: none;
-        }
-        
-        .main-image::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-            pointer-events: none;
-        }
-        
-        .main-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-            transition: transform 0.5s ease;
-        }
-        
-        .main-image:hover {
-            transform: translateY(-5px) scale(1.02);
-        }
-        
-        .main-image:hover img {
-            transform: scale(1.05);
-        }
-        
-        .shine-effect {
-            position: absolute;
-            top: -100%;
-            left: -100%;
-            width: 50%;
-            height: 50%;
-            background: linear-gradient(
-                to right,
-                rgba(255,255,255,0) 0%,
-                rgba(255,255,255,0.3) 50%,
-                rgba(255,255,255,0) 100%
-            );
-            transform: rotate(30deg);
-            animation: shine-animation 4s infinite;
-            pointer-events: none;
-            z-index: 2;
-        }
-        
-        @keyframes shine-animation {
-            0% {
-                top: -100%;
-                left: -100%;
-            }
-            20% {
-                top: 100%;
-                left: 100%;
-            }
-            100% {
-                top: 100%;
-                left: 100%;
-            }
-        }
-        
-        .routes {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            flex-wrap: wrap;
-            margin: 30px 0;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .route {
-            background: rgba(15, 35, 75, 0.6);
-            padding: 20px 15px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-            width: 180px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .route::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0.1) 0%, 
-                rgba(255, 255, 255, 0) 40%);
-            z-index: -1;
-        }
-        
-        .route::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(
-                circle, 
-                rgba(255, 255, 255, 0.1) 0%, 
-                rgba(255, 255, 255, 0) 60%
-            );
-            opacity: 0;
-            transition: opacity 0.5s;
-            z-index: -1;
-        }
-        
-        .route:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(247, 151, 30, 0.2);
-            border-color: rgba(255, 210, 0, 0.3);
-        }
-        
-        .route:hover::after {
-            opacity: 1;
-        }
-        
-        .route-speed {
-            font-size: 16px;
-            color: #ffd200;
-            margin-bottom: 15px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .route-speed::before {
-            content: '';
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background-color: #3cff00;
-            border-radius: 50%;
-            margin-right: 8px;
-            box-shadow: 0 0 10px #3cff00;
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(60, 255, 0, 0.7);
-            }
-            70% {
-                box-shadow: 0 0 0 6px rgba(60, 255, 0, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(60, 255, 0, 0);
-            }
-        }
-        
-        .route-button a {
-            display: block;
-            background: linear-gradient(90deg, #1a3364 0%, #254e8f 100%);
-            color: white;
-            padding: 12px 0;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 500;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-        }
-        
-        .route-button a::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, 
-                rgba(255, 255, 255, 0) 0%, 
-                rgba(255, 255, 255, 0.1) 50%, 
-                rgba(255, 255, 255, 0) 100%);
-            transition: left 0.7s;
-            z-index: -1;
-        }
-        
-        .route-button a:hover {
-            background: linear-gradient(90deg, #254e8f 0%, #346ab0 100%);
-            color: #ffffff;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-            transform: translateY(-2px);
-        }
-        
-        .route-button a:hover::before {
-            left: 100%;
-        }
-        
-        .route:nth-child(1) {
-            animation-delay: 0.1s;
-        }
-        
-        .route:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        
-        .route:nth-child(3) {
-            animation-delay: 0.3s;
-        }
-        
-        .route-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: white;
-        }
-        
         .add-to-home {
             display: none;
-            margin: 0 auto 30px;
+            margin: 20px auto 30px;
             background: linear-gradient(90deg, #ff9700 0%, #ffb700 100%);
             border: none;
             color: #1a1a1a;
@@ -397,7 +107,6 @@
             width: 100%;
             z-index: 5;
             animation: pulse-button 2s infinite;
-            margin-top: 20px;
         }
         
         @keyframes pulse-button {
@@ -413,25 +122,6 @@
             }
         }
         
-        .add-to-home::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, 
-                rgba(255, 255, 255, 0) 0%, 
-                rgba(255, 255, 255, 0.3) 50%, 
-                rgba(255, 255, 255, 0) 100%);
-            transition: left 0.7s;
-            z-index: -1;
-        }
-        
-        .add-to-home:hover::before {
-            left: 100%;
-        }
-        
         .add-to-home:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(255, 151, 0, 0.4);
@@ -440,12 +130,6 @@
         .add-to-home svg {
             margin-right: 8px;
             vertical-align: middle;
-        }
-        
-        .footer {
-            margin-top: 40px;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 14px;
         }
         
         .install-instructions {
@@ -520,6 +204,7 @@
             line-height: 1.6;
             position: relative;
             padding-left: 28px;
+            list-style-type: none;
         }
         
         .install-steps li:before {
@@ -548,16 +233,17 @@
         
         .close-install {
             position: absolute;
-            top: 12px;
-            right: 12px;
-            width: 36px;
-            height: 36px;
-            background: rgba(0, 0, 0, 0.1);
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.15);
             border: none;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 22px;
-            color: #555;
+            font-size: 24px;
+            font-weight: bold;
+            color: #444;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -567,37 +253,18 @@
         }
         
         .close-install:hover, .close-install:active {
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.25);
             transform: rotate(90deg);
-        }
-        
-        .close-install:active {
-            transform: scale(0.9) rotate(45deg);
+            color: #222;
         }
         
         #confirmInstall {
-            margin-top: 5px;
+            margin-top: 20px;
             background: linear-gradient(90deg, #1a3364 0%, #254e8f 100%);
             color: white;
             border: none;
             font-weight: bold;
-            padding: 14px 25px;
-            border-radius: 30px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(26, 51, 100, 0.3);
             width: 100%;
-        }
-        
-        #confirmInstall:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(26, 51, 100, 0.4);
-        }
-        
-        #confirmInstall svg {
-            margin-right: 8px;
-            vertical-align: middle;
         }
         
         .ios-install-arrow {
@@ -618,71 +285,6 @@
             50% {
                 transform: translateY(-15px);
             }
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .main-image-container {
-                margin: 10px 0 35px;
-            }
-            
-            @keyframes float {
-                0% {
-                    transform: translateY(0px);
-                }
-                50% {
-                    transform: translateY(-8px);
-                }
-                100% {
-                    transform: translateY(0px);
-                }
-            }
-            
-            .routes {
-                flex-direction: column;
-                align-items: center;
-                gap: 20px;
-            }
-            
-            .route {
-                width: 100%;
-                max-width: 280px;
-            }
-            
-            .add-to-home {
-                padding: 14px 20px;
-                font-size: 16px;
-                margin-bottom: 20px;
-            }
-            
-            .install-box {
-                padding: 25px 20px;
-                max-width: 90%;
-            }
-            
-            .install-title {
-                font-size: 20px;
-            }
-            
-            .install-steps li {
-                margin-bottom: 12px;
-                font-size: 15px;
-            }
-        }
-        
-        .install-steps img {
-            max-width: 100%;
-            border-radius: 8px;
-            margin: 10px 0;
-            border: 1px solid #eee;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        html {
-            scroll-behavior: smooth;
         }
         
         .theme-toggle {
@@ -708,6 +310,121 @@
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
         }
+        
+        .main-content {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .main-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .main-description {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .main-image-container {
+            margin: 20px auto 30px;
+            max-width: 100%;
+            text-align: center;
+        }
+        
+        .main-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+        }
+        
+        .main-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .custom-button {
+            display: block;
+            margin: 20px auto;
+            background: linear-gradient(90deg, #3a5998 0%, #4c75c3 100%);
+            border: none;
+            color: #ffffff;
+            font-weight: bold;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(58, 89, 152, 0.3);
+            position: relative;
+            overflow: hidden;
+            max-width: 280px;
+            width: 100%;
+            z-index: 5;
+        }
+        
+        .custom-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(58, 89, 152, 0.4);
+        }
+        
+        /* 为新增的三个线路按钮添加样式 */
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+            width: 100%;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .route-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 20px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: #ffffff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .route-button svg {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+        }
+        
+        .route-button.primary {
+            background: linear-gradient(90deg, #ff9700 0%, #ffb700 100%);
+            color: #1a1a1a;
+        }
+        
+        .route-button.secondary {
+            background: linear-gradient(90deg, #1a3364 0%, #254e8f 100%);
+        }
+        
+        .route-button.tertiary {
+            background: linear-gradient(90deg, #0a1529 0%, #1f3a60 100%);
+        }
+        
+        .route-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -726,13 +443,13 @@
             <!-- 安卓标准说明 -->
             <div id="androidInstructions">
                 <ul class="install-steps">
-                    <li>点击浏览器右上角的菜单按钮 (⋮)</li>
-                    <li>在弹出菜单中选择"安装应用"或"添加到主屏幕"选项</li>
-                    <li>如果没有直接看到安装选项，可能需要点击"添加到主屏幕"后再选择"安装"</li>
-                    <li>在弹出的确认窗口中点击"安装"</li>
-                    <li>完成后，您可以通过主屏幕图标直接访问085757.cc</li>
+                    <li>点击浏览器右上角的<strong>安装</strong>按钮或菜单按钮 (⋮)</li>
+                    <li>如果看到<strong>安装应用</strong>选项，直接点击它</li>
+                    <li>如果没有看到安装选项，选择<strong>添加到主屏幕</strong>或<strong>安装</strong></li>
+                    <li>在弹出的确认窗口中点击<strong>安装</strong>按钮</li>
+                    <li>安装完成后，点击主屏幕上的图标即可直接访问本站</li>
                 </ul>
-                <p style="margin-top: 15px; font-size: 14px; color: #666; font-style: italic;">提示：不同版本的Chrome可能有略微不同的界面，如果无法找到"安装"选项，请尝试在Chrome地址栏右侧查找"安装"图标。</p>
+                <p style="margin-top: 15px; font-size: 14px; color: #666; font-style: italic;">提示：安装后使用主屏幕图标打开可获得全屏体验，无浏览器地址栏干扰。</p>
             </div>
             
             <!-- iOS说明 -->
@@ -754,8 +471,6 @@
                     <li>完成后，您可以通过主屏幕图标直接访问085757.cc</li>
                     <li>如需全屏体验，可在"设置-全屏显示"中开启本应用的全屏模式</li>
                 </ul>
-                <img src="images/miui-add-to-home.png" alt="小米添加到桌面示意图" style="display: none;" id="miuiScreenshot">
-                <p style="margin-top: 15px; font-size: 14px; color: #666; font-style: italic;">提示：在MIUI系统中，请注意查看"更多"或"工具"菜单，不同版本的MIUI可能略有差异。</p>
             </div>
             
             <button class="add-to-home" id="confirmInstall" type="button">
@@ -767,14 +482,14 @@
             </button>
         </div>
     </div>
-
+    
     <!-- iOS分享箭头提示 -->
     <div class="ios-install-arrow" id="iosInstallArrow">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" fill="#ffb700" stroke="#000" stroke-width="1">
             <path d="M25,3L3,30h12v17h20V30h12L25,3z"/>
         </svg>
     </div>
-
+    
     <div class="container">
         <!-- 添加到主屏幕按钮 -->
         <button class="add-to-home" id="addToHomeScreen">
@@ -785,47 +500,41 @@
             添加到主屏幕
         </button>
         
-        <div class="main-image-container">
-            <div class="glow-effect"></div>
-            <div class="main-image" id="main-image">
-                <!-- 这里放置你的主图 -->
-                <img src="images/main-image.png" alt="主图" loading="lazy">
-                <div class="shine-effect"></div>
-            </div>
-        </div>
-        
-        <div class="routes">
-            <div class="route">
-                <div class="route-title">线路 1</div>
-                <div class="route-speed">50ms</div>
-                <div class="route-button">
-                    <a href="https://www.xucai666.com/?code=17p/#/home">进入官网</a>
-                </div>
+        <!-- 网站主要内容 -->
+        <div class="main-content">
+            <!-- 仅保留图像容器 -->
+            <div class="main-image-container">
+                <img src="images/main-image.png" alt="在线娱乐平台" class="main-image" 
+                     onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzFhMzM2NCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMThweCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgZmlsbD0iI2ZmZiI+5Zu+54mH5LiN5Y+v55SoPC90ZXh0Pjwvc3ZnPg==';">
             </div>
             
-            <div class="route">
-                <div class="route-title">线路 2</div>
-                <div class="route-speed">50ms</div>
-                <div class="route-button">
-                    <a href="https://www.xucai666.com/?code=17p/#/register">立即注册</a>
-                </div>
+            <!-- 新增三个线路按钮 -->
+            <div class="buttons-container">
+                <a href="https://www.xucai666.com/?code=17p/#/home" class="route-button primary" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5z"/>
+                    </svg>
+                    官网
+                </a>
+                <a href="https://www.xucai666.com/?code=17p/#/register" class="route-button secondary" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                        <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"/>
+                    </svg>
+                    立即注册
+                </a>
+                <a href="https://www.xucai666.com/?code=17p/#/login" class="route-button tertiary" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                    </svg>
+                    立即登入
+                </a>
             </div>
-            
-            <div class="route">
-                <div class="route-title">线路 3</div>
-                <div class="route-speed">40ms</div>
-                <div class="route-button">
-                    <a href="https://www.xucai666.com/?code=17p/#/login">快速登入</a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer">
-            © 2025 娱乐平台 版权所有
         </div>
     </div>
-
-    <!-- 添加在body的末尾 -->
+    
+    <!-- 主题切换按钮 -->
     <button class="theme-toggle" id="themeToggle">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
@@ -833,6 +542,10 @@
     </button>
 
     <script>
+        // 声明全局变量
+        let deferredPrompt;
+        let installAttempted = false;
+
         // 页面加载完成后隐藏加载动画
         window.addEventListener('load', function() {
             setTimeout(function() {
@@ -843,27 +556,6 @@
             checkAndShowAddToHomeButton();
         });
         
-        // 模拟线路速度检测
-        function updateRouteSpeeds() {
-            const speeds = [40, 45, 50, 55, 60];
-            const routeSpeeds = document.querySelectorAll('.route-speed');
-            
-            routeSpeeds.forEach(speedElement => {
-                const randomSpeed = speeds[Math.floor(Math.random() * speeds.length)];
-                speedElement.textContent = randomSpeed + 'ms';
-            });
-        }
-        
-        // 初始化时更新一次速度
-        updateRouteSpeeds();
-        
-        // 每隔30秒更新一次速度
-        setInterval(updateRouteSpeeds, 30000);
-        
-        // 声明全局变量
-        let deferredPrompt;
-        let installAttempted = false;
-
         // 添加到主屏幕功能
         function checkAndShowAddToHomeButton() {
             const addToHomeButton = document.getElementById('addToHomeScreen');
@@ -897,91 +589,71 @@
                 return;
             }
             
-            // 对于所有安卓设备，总是显示按钮
+            // 根据设备类型处理按钮显示
             if (isAndroid) {
                 addToHomeButton.style.display = 'block';
-                console.log('安卓设备，显示按钮');
-                
-                // 对于小米设备，可以尝试自动添加到主屏幕
-                if (isXiaomi && !installAttempted) {
-                    console.log('检测到小米设备，尝试自动添加到主屏幕');
-                    
-                    // 这个方法在部分MIUI设备上可能会触发添加到主屏幕
-                    try {
-                        const link = document.createElement('link');
-                        link.rel = 'manifest';
-                        link.href = 'manifest.json?trigger=xiaomi';
-                        document.head.appendChild(link);
-                        installAttempted = true;
-                    } catch(e) {
-                        console.error('自动添加到主屏幕失败:', e);
-                    }
+                if (isChrome) {
+                    addToHomeButton.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                        </svg>
+                        安装到桌面
+                    `;
                 }
             }
             
-            // 对于iOS Safari，总是显示按钮
             if (isIOS && isSafari) {
                 addToHomeButton.style.display = 'block';
-                console.log('iOS Safari，显示按钮');
             }
 
-            // 为按钮添加点击事件，使用removeEventListener避免重复绑定
-            addToHomeButton.removeEventListener('click', handleAddToHomeClick);
+            // 为按钮添加点击事件
+            addToHomeButton.removeEventListener('click', handleAddToHomeClick); // 避免重复绑定
             addToHomeButton.addEventListener('click', handleAddToHomeClick);
             
             function handleAddToHomeClick() {
-                console.log('添加到主屏幕按钮被点击, 当前URL:', currentUrl);
+                console.log('添加到主屏幕按钮被点击');
                 
-                // 小米浏览器特殊处理
-                if (isMiui || isXiaomi) {
+                // 设备特定处理逻辑
+                if (isAndroid && isChrome) {
+                    if (deferredPrompt) {
+                        console.log('存在安装提示，显示安装对话框');
+                        deferredPrompt.prompt();
+                        
+                        deferredPrompt.userChoice.then((choiceResult) => {
+                            console.log('用户安装选择结果:', choiceResult.outcome);
+                            if (choiceResult.outcome === 'accepted') {
+                                console.log('用户接受安装');
+                                addToHomeButton.textContent = '安装成功！';
+                                setTimeout(() => {
+                                    addToHomeButton.style.display = 'none';
+                                }, 2000);
+                            } else {
+                                console.log('用户拒绝安装，显示手动安装说明');
+                                showInstallInstructions(isIOS);
+                            }
+                            deferredPrompt = null;
+                        }).catch(err => {
+                            console.error('安装提示错误:', err);
+                            showInstallInstructions(isIOS);
+                        });
+                    } else {
+                        console.log('无安装提示，显示手动安装指引');
+                        showInstallInstructions(false);
+                    }
+                } else if (isMiui || isXiaomi) {
                     console.log('小米设备，显示MIUI特定说明');
                     showInstallInstructions(false, true);
-                    
-                    // 尝试调用小米特定的API (这在某些MIUI版本中可能有效)
-                    try {
-                        if (typeof navigator.app !== 'undefined' && typeof navigator.app.addShortcut === 'function') {
-                            navigator.app.addShortcut({
-                                id: 'app-shortcut',
-                                title: '在线娱乐平台',
-                                iconUrl: 'images/icon-192x192.png'
-                            });
-                            console.log('调用小米添加快捷方式API');
-                        }
-                    } catch(e) {
-                        console.error('添加快捷方式API调用失败:', e);
-                    }
-                    return;
-                }
-                
-                // 常规PWA安装流程
-                if (deferredPrompt) {
-                    console.log('存在安装提示，显示安装对话框');
-                    // 显示安装提示
-                    deferredPrompt.prompt();
-                    
-                    // 等待用户响应
-                    deferredPrompt.userChoice.then((choiceResult) => {
-                        if (choiceResult.outcome === 'accepted') {
-                            console.log('用户接受安装');
-                        } else {
-                            console.log('用户拒绝安装，显示手动安装说明');
-                            showInstallInstructions(isIOS);
-                        }
-                        // 使用后重置延迟提示变量
-                        deferredPrompt = null;
-                    }).catch(err => {
-                        console.error('安装提示错误:', err);
-                        showInstallInstructions(isIOS);
-                    });
+                } else if (isIOS) {
+                    console.log('iOS设备，显示iOS特定说明');
+                    showInstallInstructions(true);
                 } else {
-                    console.log('无安装提示，显示手动安装指引');
-                    // 显示手动安装指南
-                    showInstallInstructions(isIOS);
+                    console.log('其他设备，显示通用安装说明');
+                    showInstallInstructions(false);
                 }
                 
-                // 更新manifest文件中的start_url (这需要服务器端支持)
+                // 更新manifest链接
                 try {
-                    // 尝试动态更新manifest
                     const linkElement = document.querySelector('link[rel="manifest"]');
                     if (linkElement) {
                         linkElement.href = `manifest.json?url=${encodeURIComponent(currentUrl)}&t=${Date.now()}`;
@@ -993,56 +665,9 @@
             }
         }
 
-        // 更新 beforeinstallprompt 事件处理
-        window.addEventListener('beforeinstallprompt', (e) => {
-            // 阻止Chrome自动显示安装提示
-            e.preventDefault();
-            console.log('捕获到beforeinstallprompt事件', e);
-            
-            // 存储事件供以后使用
-            deferredPrompt = e;
-            
-            // 获取当前URL
-            const currentUrl = window.location.href;
-            console.log('当前准备安装的URL:', currentUrl);
-            
-            // 确保按钮可见
-            const addToHomeButton = document.getElementById('addToHomeScreen');
-            addToHomeButton.style.display = 'block';
-            
-            // 对于支持自动安装的浏览器，可以尝试自动触发安装对话框
-            setTimeout(() => {
-                const userAgent = navigator.userAgent;
-                const isAndroid = /Android/i.test(userAgent);
-                const isChrome = /Chrome/i.test(userAgent) && !/Edge|Edg/i.test(userAgent);
-                const isMobile = /Mobile/i.test(userAgent);
-                
-                if (isAndroid && isChrome && isMobile && deferredPrompt && !installAttempted) {
-                    console.log('尝试自动触发安装提示');
-                    // 注意：有些浏览器可能会阻止自动触发，这取决于用户交互策略
-                    try {
-                        deferredPrompt.prompt();
-                        installAttempted = true;
-                        
-                        deferredPrompt.userChoice.then((choiceResult) => {
-                            console.log('自动安装提示结果:', choiceResult.outcome);
-                            if (choiceResult.outcome !== 'accepted') {
-                                // 如果用户没有接受，我们不做任何处理，保留按钮
-                            } else {
-                                // 用户接受了安装
-                                addToHomeButton.style.display = 'none';
-                            }
-                            deferredPrompt = null;
-                        });
-                    } catch(e) {
-                        console.error('自动触发安装提示失败:', e);
-                    }
-                }
-            }, 3000); // 延迟3秒尝试自动触发，让用户有时间浏览页面
-        });
-
-        // 增强 showInstallInstructions 函数
+        // 安装说明显示逻辑
         function showInstallInstructions(isIOS, isMiui = false) {
+            // 根据设备类型显示不同的安装说明
             const androidInstructions = document.getElementById('androidInstructions');
             const iosInstructions = document.getElementById('iosInstructions');
             const miuiInstructions = document.getElementById('miuiInstructions');
@@ -1054,21 +679,12 @@
             if (miuiInstructions) miuiInstructions.style.display = 'none';
             iosInstallArrow.style.display = 'none';
             
-            // 根据设备类型显示不同的说明
+            // 根据设备类型显示相应说明
             if (isIOS) {
                 iosInstructions.style.display = 'block';
-                iosInstallArrow.style.display = 'block'; // 显示iOS箭头提示
+                iosInstallArrow.style.display = 'block';
             } else if (isMiui && miuiInstructions) {
                 miuiInstructions.style.display = 'block';
-                
-                // 尝试加载小米截图
-                const miuiScreenshot = document.getElementById('miuiScreenshot');
-                if (miuiScreenshot) {
-                    miuiScreenshot.style.display = 'block';
-                    miuiScreenshot.onerror = function() {
-                        this.style.display = 'none';
-                    };
-                }
             } else {
                 androidInstructions.style.display = 'block';
             }
@@ -1076,32 +692,68 @@
             document.getElementById('installInstructions').style.display = 'flex';
         }
         
-        // 关闭安装说明
+        // beforeinstallprompt 事件处理
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            console.log('捕获到beforeinstallprompt事件');
+            deferredPrompt = e;
+            document.getElementById('addToHomeScreen').style.display = 'block';
+        });
+
+        // 应用安装事件处理
+        window.addEventListener('appinstalled', (evt) => {
+            console.log('应用已成功安装到主屏幕');
+            document.getElementById('addToHomeScreen').style.display = 'none';
+            
+            // 显示安装成功提示
+            const installSuccess = document.createElement('div');
+            installSuccess.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 30px;
+                z-index: 9999;
+                animation: fadeInOut 3s forwards;
+            `;
+            installSuccess.textContent = '已成功添加到主屏幕！';
+            document.body.appendChild(installSuccess);
+            
+            // 添加淡入淡出动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeInOut {
+                    0% { opacity: 0; }
+                    20% { opacity: 1; }
+                    80% { opacity: 1; }
+                    100% { opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            setTimeout(() => {
+                document.body.removeChild(installSuccess);
+            }, 3000);
+        });
+        
+        // 确认和关闭按钮处理
         document.getElementById('closeInstall').addEventListener('click', function(e) {
-            e.preventDefault(); // 阻止默认行为
-            e.stopPropagation(); // 阻止事件冒泡
+            e.preventDefault();
+            e.stopPropagation();
             console.log('关闭按钮被点击');
             document.getElementById('installInstructions').style.display = 'none';
             document.getElementById('iosInstallArrow').style.display = 'none';
         });
         
-        // 确认按钮关闭说明
         document.getElementById('confirmInstall').addEventListener('click', function(e) {
-            e.preventDefault(); // 阻止默认行为
-            e.stopPropagation(); // 阻止事件冒泡
+            e.preventDefault();
+            e.stopPropagation();
             console.log('确认按钮被点击');
             document.getElementById('installInstructions').style.display = 'none';
             document.getElementById('iosInstallArrow').style.display = 'none';
-        });
-        
-        // 增加点击外部区域关闭功能
-        document.getElementById('installInstructions').addEventListener('click', function(e) {
-            // 仅当点击的是遮罩层而不是内容框时才关闭
-            if (e.target === this) {
-                console.log('点击遮罩层关闭');
-                this.style.display = 'none';
-                document.getElementById('iosInstallArrow').style.display = 'none';
-            }
         });
         
         // 如果支持PWA，注册service worker
@@ -1114,24 +766,20 @@
                 });
             });
         }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const mainImage = document.querySelector('#main-image img');
-            mainImage.onerror = function() {
-                this.onerror = null;
-                this.src = 'images/fallback-image.png'; // 添加一个备用图片
-                console.log('主图加载失败，已替换为备用图');
-            };
-        });
-
+        
         // 主题切换功能
         document.getElementById('themeToggle').addEventListener('click', function() {
             document.body.classList.toggle('light-theme');
             document.body.classList.toggle('dark-theme');
         });
-        
-        // 默认主题
-        document.body.classList.add('dark-theme');
+
+        // 添加点击弹窗外部区域关闭功能
+        document.getElementById('installInstructions').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+                document.getElementById('iosInstallArrow').style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
