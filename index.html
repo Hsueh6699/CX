@@ -486,10 +486,8 @@
             <span style="font-weight: bold; font-size: 16px;">【一键添加】将彩旭娱乐添加到主屏幕，获得全屏体验！</span>
             <button id="installBannerBtn"
                 style="background: #1a1a1a; color: white; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 3px 8px rgba(0,0,0,0.2); transition: all 0.3s; animation: pulse-button 2s infinite;">
-                立即安装
+                立即下载
             </button>
-            <button id="closeBannerBtn"
-                style="background: transparent; border: none; color: #1a1a1a; font-size: 20px; cursor: pointer; margin-left: 5px; line-height: 1;">×</button>
         </div>
     </div>
 
@@ -626,20 +624,13 @@
             setTimeout(function () {
                 document.getElementById('loading').classList.add('hide');
 
-                // 直接显示安装横幅（除非已在独立模式运行）
-                const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches ||
-                    window.navigator.standalone === true;
+                // 移除条件判断，始终显示安装横幅
+                document.getElementById('installBanner').style.display = 'block';
 
-                if (!isInStandaloneMode && !localStorage.getItem('installBannerClosed')) {
-                    document.getElementById('installBanner').style.display = 'block';
-                }
-
-                // 动态更新manifest链接，使用当前URL
-                updateManifestUrl();
-
-                // 生成动态manifest
-                generateDynamicManifest();
             }, 500);
+
+            // 更新manifest链接也可以保留
+            updateManifestUrl();
         });
 
         // 添加动态更新manifest URL的函数
@@ -870,7 +861,6 @@
         // 应用安装事件处理
         window.addEventListener('appinstalled', (evt) => {
             console.log('应用已成功安装到主屏幕');
-            document.getElementById('addToHomeScreen').style.display = 'none';
 
             // 显示安装成功提示
             const installSuccess = document.createElement('div');
@@ -948,42 +938,40 @@
             }
         });
 
-        // 改进横幅按钮点击处理
+        // 为横幅按钮添加事件处理
         document.getElementById('installBannerBtn').addEventListener('click', function () {
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            const isAndroid = /Android/i.test(navigator.userAgent);
-
-            // 如果是Android并且有deferredPrompt，使用正常PWA安装
-            if (isAndroid && deferredPrompt) {
+            if (deferredPrompt) {
+                // 如果有安装提示对象，直接使用
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        document.getElementById('installBanner').style.display = 'none';
-                    }
+                    console.log('用户选择结果:', choiceResult.outcome);
                     deferredPrompt = null;
                 });
-                return;
-            }
-
-            // iOS设备使用Web Share API + 指引
-            if (isIOS && navigator.share) {
-                // 分享当前页面
-                navigator.share({
-                    title: document.title,
-                    url: window.location.href
-                }).then(() => {
-                    // 分享成功后显示添加到主屏幕的指引弹窗
-                    showIOSInstallInstructions();
-                });
             } else {
-                // 其他情况显示自定义安装指引
-                showInstallInstructions(isIOS);
-            }
-        });
+                // 如果没有deferredPrompt，检查设备类型
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                const isAndroid = /Android/i.test(navigator.userAgent);
 
-        document.getElementById('closeBannerBtn').addEventListener('click', function () {
-            document.getElementById('installBanner').style.display = 'none';
-            localStorage.setItem('installBannerClosed', 'true');
+                if (isIOS) {
+                    // iOS设备显示Safari专用安装说明
+                    showInstallInstructions(true);
+                } else if (isAndroid) {
+                    // Android设备但没有deferredPrompt，显示一般安装说明
+                    showInstallInstructions(false);
+                } else {
+                    // 其他设备，提供下载APP的链接或备用方案
+                    const overlay = document.createElement('div');
+                    overlay.innerHTML = `
+                        <div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;text-align:center;padding:20px;">
+                            <h3>下载彩旭娱乐</h3>
+                            <p style="margin:20px 0;">请点击下方按钮下载安装我们的应用</p>
+                            <a href="https://www.xucai666.com/?code=17p/#/download" style="display:inline-block;padding:10px 25px;background:linear-gradient(90deg, #ff9700 0%, #ffb700 100%);color:#1a1a1a;border-radius:30px;text-decoration:none;font-weight:bold;margin:15px 0;">下载应用</a>
+                            <button style="background:transparent;border:1px solid white;color:white;padding:10px 20px;border-radius:30px;margin-top:10px;" onclick="this.parentNode.remove()">关闭</button>
+                        </div>
+                    `;
+                    document.body.appendChild(overlay.firstElementChild);
+                }
+            }
         });
 
         // iOS专用添加到主屏幕指引，更简化的步骤
@@ -1086,6 +1074,18 @@
                 </div>
             `;
             document.body.appendChild(overlay.firstElementChild);
+        }
+
+        // 检查是否已安装PWA 
+        function checkPwaStatus() {
+            const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches ||
+                window.navigator.standalone === true;
+
+            // 即使在独立模式下运行，也不隐藏安装横幅
+            // 虽然是独立模式，但我们仍显示横幅
+            if (isInStandaloneMode) {
+                console.log('已处于独立模式，但仍显示安装横幅');
+            }
         }
     </script>
 </body>
