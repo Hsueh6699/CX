@@ -1,7 +1,7 @@
 {
-  "name": "在线娱乐平台",
-  "short_name": "085757.cc",
-  "description": "在线娱乐平台 - 提供优质在线服务",
+  "name": "彩旭娱乐",
+  "short_name": "彩旭娱乐",
+  "description": "彩旭娱乐 - 提供优质在线服务",
   "start_url": "./index.html?source=pwa",
   "display": "standalone",
   "background_color": "#0a1529",
@@ -10,7 +10,10 @@
   "prefer_related_applications": false,
   "related_applications": [],
   "scope": "./",
-  "categories": ["entertainment", "gaming"],
+  "categories": [
+    "entertainment",
+    "gaming"
+  ],
   "dir": "auto",
   "lang": "zh-CN",
   "iarc_rating_id": "",
@@ -78,4 +81,4 @@
       "purpose": "any maskable"
     }
   ]
-} 
+}

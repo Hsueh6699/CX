@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安装到主屏幕</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            background: linear-gradient(135deg, #0a1529 0%, #1f3a60 100%);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .install-container {
+            max-width: 500px;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        .app-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, #ff9700 0%, #ffb700 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            box-shadow: 0 10px 20px rgba(255, 151, 0, 0.3);
+        }
+
+        .install-button {
+            background: linear-gradient(90deg, #ff9700 0%, #ffb700 100%);
+            color: #1a1a1a;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 15px 40px;
+            border-radius: 50px;
+            margin: 20px 0;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 151, 0, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 10px 25px rgba(255, 151, 0, 0.5);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .steps {
+            margin-top: 40px;
+            text-align: left;
+        }
+
+        .steps p {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #ff9700 0%, #ffb700 100%);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 15px;
+            color: #1a1a1a;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="install-container">
+        <div class="app-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="#1a1a1a" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                <path
+                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+            </svg>
+        </div>
+        <h1>将"在线娱乐平台"添加到主屏幕</h1>
+        <button class="install-button" id="installButton">一键安装</button>
+        <div class="steps" id="manualSteps">
+            <p>或按照以下步骤手动安装:</p>
+            <p><span class="step-number">1</span> 点击浏览器菜单按钮</p>
+            <p><span class="step-number">2</span> 选择"添加到主屏幕"选项</p>
+            <p><span class="step-number">3</span> 确认安装</p>
+        </div>
+    </div>
+
+    <script>
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('可以安装PWA');
+        });
+
+        document.getElementById('installButton').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('用户接受安装');
+                    document.querySelector('.install-container').innerHTML = '<h1>安装成功!</h1><p>应用已添加到您的主屏幕</p>';
+                } else {
+                    console.log('用户拒绝安装');
+                }
+                deferredPrompt = null;
+            } else {
+                // 根据设备显示不同指引
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                if (isIOS) {
+                    document.getElementById('manualSteps').innerHTML = `
+                        <p>在iOS设备上安装:</p>
+                        <p><span class="step-number">1</span> 点击底部分享按钮</p>
+                        <p><span class="step-number">2</span> 选择"添加到主屏幕"</p>
+                        <p><span class="step-number">3</span> 点击"添加"确认</p>
+                    `;
+                }
+                // 高亮显示手动步骤
+                document.getElementById('manualSteps').style.backgroundColor = 'rgba(255,255,255,0.1)';
+                document.getElementById('manualSteps').style.padding = '20px';
+                document.getElementById('manualSteps').style.borderRadius = '15px';
+            }
+        });
+    </script>
+</body>
+
+</html>

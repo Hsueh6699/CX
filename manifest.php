@@ -6,9 +6,9 @@ $url = isset($_GET['url']) ? $_GET['url'] : './index.html?source=pwa';
 
 // 基本manifest数据
 $manifest = [
-  "name" => "在线娱乐平台",
-  "short_name" => "在线娱乐平台",
-  "description" => "在线娱乐平台 - 提供优质在线服务",
+  "name" => "彩旭娱乐",
+  "short_name" => "彩旭娱乐",
+  "description" => "彩旭娱乐 - 提供优质在线服务",
   "start_url" => $url, // 使用传入的URL
   "display" => "standalone",
   "background_color" => "#0a1529",
