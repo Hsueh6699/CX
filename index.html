@@ -836,6 +836,9 @@
         // 每隔30秒更新一次速度
         setInterval(updateRouteSpeeds, 30000);
         
+        // 声明一个全局变量来存储安装提示
+        let deferredPrompt;
+
         // 添加到主屏幕功能
         function checkAndShowAddToHomeButton() {
             const addToHomeButton = document.getElementById('addToHomeScreen');
@@ -863,28 +866,15 @@
             if (isIOS && isSafari) {
                 addToHomeButton.style.display = 'block';
             }
+
+            // 为按钮添加点击事件
+            addToHomeButton.addEventListener('click', handleAddToHomeClick);
             
-            // 全局变量存储延迟安装提示
-            let deferredPrompt = null;
-            
-            // 监听安装事件
-            window.addEventListener('beforeinstallprompt', (e) => {
-                // 阻止Chrome自动显示安装提示
-                e.preventDefault();
-                
-                // 存储事件以稍后触发
-                deferredPrompt = e;
-                
-                // 显示安装按钮
-                addToHomeButton.style.display = 'block';
-                console.log('捕获到安装事件，显示安装按钮');
-            });
-            
-            // 为按钮添加一次性点击事件，避免重复绑定
-            addToHomeButton.onclick = function(e) {
+            function handleAddToHomeClick() {
+                console.log('添加到主屏幕按钮被点击');
                 if (deferredPrompt) {
-                    console.log('触发原生安装提示');
-                    // 尝试显示安装提示
+                    console.log('存在安装提示，显示安装对话框');
+                    // 显示安装提示
                     deferredPrompt.prompt();
                     
                     // 等待用户响应
@@ -895,23 +885,38 @@
                             console.log('用户拒绝安装，显示手动安装说明');
                             showInstallInstructions(isIOS);
                         }
-                        // 无论结果如何，清除延迟提示对象
+                        // 使用后重置延迟提示变量
                         deferredPrompt = null;
                     });
                 } else {
-                    console.log('无延迟安装提示，显示手动安装指引');
-                    // 没有延迟提示对象，显示手动安装指南
+                    console.log('无安装提示，显示手动安装指引');
+                    // 显示手动安装指南
                     showInstallInstructions(isIOS);
                 }
-            };
-            
-            // 处理安装完成事件
-            window.addEventListener('appinstalled', (evt) => {
-                console.log('应用已安装到主屏幕');
-                // 安装完成后隐藏按钮
-                addToHomeButton.style.display = 'none';
-            });
+            }
         }
+
+        // 在页面加载时和beforeinstallprompt事件监听器单独处理
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // 阻止Chrome自动显示安装提示
+            e.preventDefault();
+            console.log('捕获到beforeinstallprompt事件');
+            
+            // 存储事件供以后使用
+            deferredPrompt = e;
+            
+            // 确保按钮可见
+            const addToHomeButton = document.getElementById('addToHomeScreen');
+            addToHomeButton.style.display = 'block';
+        });
+
+        // 安装完成后的处理
+        window.addEventListener('appinstalled', (evt) => {
+            console.log('应用已成功安装到主屏幕');
+            // 安装完成后隐藏按钮
+            document.getElementById('addToHomeScreen').style.display = 'none';
+            deferredPrompt = null;
+        });
         
         // 显示安装说明
         function showInstallInstructions(isIOS) {
