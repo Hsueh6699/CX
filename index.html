@@ -874,11 +874,15 @@
             const isMiui = /MiuiBrowser/i.test(navigator.userAgent) || /(MI|Redmi|POCO)/i.test(navigator.userAgent);
             const isXiaomi = /(MI|Redmi|POCO)/i.test(navigator.userAgent);
             
+            // 获取当前URL作为添加到主屏幕的链接
+            const currentUrl = window.location.href;
+            
             console.log('设备详细信息:', {
                 isAndroid, 
                 isChrome, 
                 isMiui, 
                 isXiaomi,
+                currentUrl: currentUrl,
                 userAgent: navigator.userAgent
             });
             
@@ -926,7 +930,7 @@
             addToHomeButton.addEventListener('click', handleAddToHomeClick);
             
             function handleAddToHomeClick() {
-                console.log('添加到主屏幕按钮被点击');
+                console.log('添加到主屏幕按钮被点击, 当前URL:', currentUrl);
                 
                 // 小米浏览器特殊处理
                 if (isMiui || isXiaomi) {
@@ -974,6 +978,18 @@
                     // 显示手动安装指南
                     showInstallInstructions(isIOS);
                 }
+                
+                // 更新manifest文件中的start_url (这需要服务器端支持)
+                try {
+                    // 尝试动态更新manifest
+                    const linkElement = document.querySelector('link[rel="manifest"]');
+                    if (linkElement) {
+                        linkElement.href = `manifest.json?url=${encodeURIComponent(currentUrl)}&t=${Date.now()}`;
+                        console.log('已更新manifest链接以包含当前URL');
+                    }
+                } catch(e) {
+                    console.error('更新manifest失败:', e);
+                }
             }
         }
 
@@ -985,6 +1001,10 @@
             
             // 存储事件供以后使用
             deferredPrompt = e;
+            
+            // 获取当前URL
+            const currentUrl = window.location.href;
+            console.log('当前准备安装的URL:', currentUrl);
             
             // 确保按钮可见
             const addToHomeButton = document.getElementById('addToHomeScreen');
