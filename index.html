@@ -431,6 +431,12 @@
             70% { transform: translateY(10px); }
             100% { transform: translateY(0); }
         }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -440,15 +446,17 @@
         <div class="loading-text">加载中...</div>
     </div>
 
-    <!-- 添加安装提示横幅 -->
+    <!-- 添加安装提示横幅 - 保持固定显示 -->
     <div id="installBanner" style="display: none; position: fixed; top: 0; left: 0; width: 100%; background: linear-gradient(90deg, #ff9700 0%, #ffb700 100%); color: #1a1a1a; padding: 15px; text-align: center; z-index: 999; box-shadow: 0 4px 15px rgba(0,0,0,0.3); animation: bounce-down 0.5s ease;">
         <div style="display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" style="flex-shrink: 0;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" style="flex-shrink: 0; animation: pulse 1.5s infinite;">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                 <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
             </svg>
-            <span style="font-weight: bold; font-size: 16px;">将本站添加到主屏幕，获得全屏体验！</span>
-            <button id="installBannerBtn" style="background: #1a1a1a; color: white; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 3px 8px rgba(0,0,0,0.2); transition: all 0.3s;">立即安装</button>
+            <span style="font-weight: bold; font-size: 16px;">【一键添加】将本站添加到主屏幕，获得全屏体验！</span>
+            <button id="installBannerBtn" style="background: #1a1a1a; color: white; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 3px 8px rgba(0,0,0,0.2); transition: all 0.3s; animation: pulse-button 2s infinite;">
+                立即安装
+            </button>
             <button id="closeBannerBtn" style="background: transparent; border: none; color: #1a1a1a; font-size: 20px; cursor: pointer; margin-left: 5px; line-height: 1;">×</button>
         </div>
     </div>
@@ -704,35 +712,46 @@
             document.getElementById('installInstructions').style.display = 'flex';
         }
         
-        // beforeinstallprompt 事件处理
+        // beforeinstallprompt 事件处理 - 优化自动触发安装提示
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             console.log('捕获到beforeinstallprompt事件');
             deferredPrompt = e;
             
-            // 设置短暂延迟后自动触发安装提示
-            setTimeout(() => {
-                if (deferredPrompt && !installAttempted) {
-                    installAttempted = true;
-                    console.log('自动触发安装提示');
-                    deferredPrompt.prompt();
-                    
-                    deferredPrompt.userChoice.then((choiceResult) => {
-                        console.log('用户安装选择结果:', choiceResult.outcome);
-                        if (choiceResult.outcome === 'accepted') {
-                            console.log('用户接受安装');
-                            document.getElementById('addToHomeScreen').style.display = 'none';
-                        } else {
-                            console.log('用户拒绝安装');
-                            // 用户拒绝后显示安装按钮
-                            document.getElementById('addToHomeScreen').style.display = 'block';
-                        }
-                        deferredPrompt = null;
-                    });
-                } else {
-                    document.getElementById('addToHomeScreen').style.display = 'block';
-                }
-            }, 2000); // 延迟2秒，给页面加载一些时间
+            // 确保横幅显示
+            document.getElementById('installBanner').style.display = 'block';
+            
+            // 添加触摸安装按钮事件，使其显得更为明显
+            const installBtn = document.getElementById('installBannerBtn');
+            installBtn.style.animation = 'pulse-button 1s infinite';
+            
+            // 延迟自动触发安装提示，让用户有机会查看页面
+            if (!localStorage.getItem('installPromptShown')) {
+                setTimeout(() => {
+                    // 只在用户第一次访问时自动提示
+                    if (deferredPrompt && !installAttempted) {
+                        installAttempted = true;
+                        localStorage.setItem('installPromptShown', 'true');
+                        console.log('自动触发安装提示');
+                        
+                        // 下面这个API会在屏幕中央弹出浏览器的安装确认框
+                        deferredPrompt.prompt();
+                        
+                        deferredPrompt.userChoice.then((choiceResult) => {
+                            console.log('用户安装选择结果:', choiceResult.outcome);
+                            if (choiceResult.outcome === 'accepted') {
+                                console.log('用户接受安装');
+                                document.getElementById('installBanner').style.display = 'none';
+                            } else {
+                                console.log('用户拒绝安装');
+                                // 重置安装尝试标志，允许再次点击安装
+                                installAttempted = false;
+                            }
+                            deferredPrompt = null;
+                        });
+                    }
+                }, 3000); // 延迟3秒，让用户注意到页面内容
+            }
         });
 
         // 应用安装事件处理
@@ -816,18 +835,26 @@
             }
         });
 
-        // 为横幅按钮添加事件处理
+        // 改进横幅按钮点击处理
         document.getElementById('installBannerBtn').addEventListener('click', function() {
+            // 无论是否已经尝试过安装，都允许用户再次点击安装按钮
             if (deferredPrompt) {
+                installAttempted = true;
                 deferredPrompt.prompt();
+                
                 deferredPrompt.userChoice.then((choiceResult) => {
                     if (choiceResult.outcome === 'accepted') {
                         document.getElementById('installBanner').style.display = 'none';
+                    } else {
+                        // 用户拒绝安装，但我们仍保留横幅
+                        installAttempted = false; // 重置，允许再次点击
                     }
                     deferredPrompt = null;
                 });
             } else {
-                showInstallInstructions(false);
+                // 如果没有deferredPrompt，则显示手动安装说明
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                showInstallInstructions(isIOS);
             }
         });
         
