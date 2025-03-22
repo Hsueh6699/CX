@@ -266,11 +266,49 @@ function addIOSSpecificElements() {
 
 // 添加悬浮LOGO按钮和菜单功能
 document.addEventListener('DOMContentLoaded', function () {
-    // 现有变量和函数保持不变
-    // ...
+    // 获取LOGO按钮元素
+    const floatingLogoBtn = document.getElementById('floatingLogoBtn');
+    const logoImg = floatingLogoBtn ? floatingLogoBtn.querySelector('img') : null;
+
+    // 调整LOGO尺寸函数
+    function adjustLogoSize() {
+        if (!floatingLogoBtn || !logoImg) return;
+
+        // 获取视口宽度
+        const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+
+        // 根据视口宽度调整LOGO尺寸
+        if (vw <= 480) {
+            // 小型手机
+            floatingLogoBtn.style.width = '60px';
+            floatingLogoBtn.style.height = '60px';
+            logoImg.style.maxWidth = '60px';
+            logoImg.style.maxHeight = '60px';
+        } else if (vw <= 768) {
+            // 平板和大型手机
+            floatingLogoBtn.style.width = '70px';
+            floatingLogoBtn.style.height = '70px';
+            logoImg.style.maxWidth = '70px';
+            logoImg.style.maxHeight = '70px';
+        } else {
+            // 桌面设备
+            floatingLogoBtn.style.width = '100px';
+            floatingLogoBtn.style.height = '100px';
+            logoImg.style.maxWidth = '100px';
+            logoImg.style.maxHeight = '100px';
+        }
+    }
+
+    // 初始调整
+    adjustLogoSize();
+
+    // 当视口尺寸改变时重新调整
+    window.addEventListener('resize', adjustLogoSize);
+
+    // 在页面加载完成后再次调整，确保图片已加载
+    window.addEventListener('load', adjustLogoSize);
 
     // 悬浮LOGO和菜单功能
-    const floatingLogoBtn = document.getElementById('floatingLogoBtn');
     const floatingMenu = document.getElementById('floatingMenu');
 
     // LOGO按钮点击事件
