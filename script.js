@@ -101,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeIosBannerBtn = document.getElementById('closeIosBannerBtn');
     const iosTutorial = document.getElementById('iosTutorial');
     const closeTutorialBtn = document.getElementById('closeTutorialBtn');
+    const iosInstallNav = document.getElementById('iosInstallNav');
 
     let deferredPrompt;
     let isIOS = false;
@@ -237,8 +238,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // 检查是否应该显示Banner
-    function checkShowBanner() {
+    // 检查是否应该显示Banner或导航按钮
+    function checkShowInstallPrompts() {
         detectPlatform();
 
         // 检测是否已安装
@@ -246,15 +247,15 @@ document.addEventListener('DOMContentLoaded', function () {
             window.navigator.standalone === true;
 
         if (isAppInstalled) {
-            // 已安装，不显示任何Banner
+            // 已安装，不显示任何提示
             return;
         }
 
         setTimeout(() => {
             if (isIOS) {
-                // iOS设备只显示iOS专用横幅
-                if (localStorage.getItem('iosBannerClosed') !== 'true') {
-                    showIOSBanner();
+                // iOS设备显示导航按钮
+                if (iosInstallNav && localStorage.getItem('iosInstallNavClosed') !== 'true') {
+                    iosInstallNav.style.display = 'flex';
                 }
             } else if ((isAndroid || isChrome) && deferredPrompt) {
                 // Android或Chrome显示标准安装横幅
@@ -266,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 启动检查
-    checkShowBanner();
+    checkShowInstallPrompts();
 
     // 检测如果是iOS设备，添加特殊元素
     detectPlatform();

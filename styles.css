@@ -695,3 +695,23 @@ footer {
         max-width: 90%;
     }
 }
+
+/* iOS安装导航按钮样式 */
+.ios-install-nav {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 122, 255, 0.9);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.3s ease;
+    transform: scale(0);
+    animation: bounce-in 0.5s forwards 1;
+}
