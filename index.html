@@ -548,25 +548,31 @@
         
         .close-install {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 30px;
-            height: 30px;
-            background: rgba(0, 0, 0, 0.05);
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            background: rgba(0, 0, 0, 0.1);
             border: none;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 22px;
             color: #555;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s;
+            z-index: 10;
+            -webkit-tap-highlight-color: transparent;
         }
         
-        .close-install:hover {
-            background: rgba(0, 0, 0, 0.1);
+        .close-install:hover, .close-install:active {
+            background: rgba(0, 0, 0, 0.2);
             transform: rotate(90deg);
+        }
+        
+        .close-install:active {
+            transform: scale(0.9) rotate(45deg);
         }
         
         #confirmInstall {
@@ -714,7 +720,7 @@
     <!-- 添加到主屏幕说明 -->
     <div class="install-instructions" id="installInstructions">
         <div class="install-box">
-            <button class="close-install" id="closeInstall">×</button>
+            <button class="close-install" id="closeInstall" type="button" aria-label="关闭">×</button>
             <div class="install-title">如何添加到主屏幕</div>
             
             <!-- 安卓标准说明 -->
@@ -752,7 +758,7 @@
                 <p style="margin-top: 15px; font-size: 14px; color: #666; font-style: italic;">提示：在MIUI系统中，请注意查看"更多"或"工具"菜单，不同版本的MIUI可能略有差异。</p>
             </div>
             
-            <button class="add-to-home" id="confirmInstall">
+            <button class="add-to-home" id="confirmInstall" type="button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
@@ -854,8 +860,9 @@
         // 每隔30秒更新一次速度
         setInterval(updateRouteSpeeds, 30000);
         
-        // 声明一个全局变量来存储安装提示
+        // 声明全局变量
         let deferredPrompt;
+        let installAttempted = false;
 
         // 添加到主屏幕功能
         function checkAndShowAddToHomeButton() {
@@ -864,9 +871,16 @@
             const isAndroid = /Android/i.test(navigator.userAgent);
             const isChrome = /Chrome/i.test(navigator.userAgent) && !/Edge|Edg/i.test(navigator.userAgent);
             const isSafari = /Safari/i.test(navigator.userAgent) && !/Chrome/i.test(navigator.userAgent);
-            const isMiui = /MiuiBrowser/i.test(navigator.userAgent);
+            const isMiui = /MiuiBrowser/i.test(navigator.userAgent) || /(MI|Redmi|POCO)/i.test(navigator.userAgent);
+            const isXiaomi = /(MI|Redmi|POCO)/i.test(navigator.userAgent);
             
-            console.log('设备检测:', {isAndroid, isChrome, isMiui, userAgent: navigator.userAgent});
+            console.log('设备详细信息:', {
+                isAndroid, 
+                isChrome, 
+                isMiui, 
+                isXiaomi,
+                userAgent: navigator.userAgent
+            });
             
             // 检查是否已安装PWA
             const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || 
@@ -883,6 +897,22 @@
             if (isAndroid) {
                 addToHomeButton.style.display = 'block';
                 console.log('安卓设备，显示按钮');
+                
+                // 对于小米设备，可以尝试自动添加到主屏幕
+                if (isXiaomi && !installAttempted) {
+                    console.log('检测到小米设备，尝试自动添加到主屏幕');
+                    
+                    // 这个方法在部分MIUI设备上可能会触发添加到主屏幕
+                    try {
+                        const link = document.createElement('link');
+                        link.rel = 'manifest';
+                        link.href = 'manifest.json?trigger=xiaomi';
+                        document.head.appendChild(link);
+                        installAttempted = true;
+                    } catch(e) {
+                        console.error('自动添加到主屏幕失败:', e);
+                    }
+                }
             }
             
             // 对于iOS Safari，总是显示按钮
@@ -891,19 +921,35 @@
                 console.log('iOS Safari，显示按钮');
             }
 
-            // 为按钮添加点击事件
+            // 为按钮添加点击事件，使用removeEventListener避免重复绑定
+            addToHomeButton.removeEventListener('click', handleAddToHomeClick);
             addToHomeButton.addEventListener('click', handleAddToHomeClick);
             
             function handleAddToHomeClick() {
                 console.log('添加到主屏幕按钮被点击');
                 
                 // 小米浏览器特殊处理
-                if (isMiui) {
-                    console.log('小米浏览器，显示MIUI特定说明');
+                if (isMiui || isXiaomi) {
+                    console.log('小米设备，显示MIUI特定说明');
                     showInstallInstructions(false, true);
+                    
+                    // 尝试调用小米特定的API (这在某些MIUI版本中可能有效)
+                    try {
+                        if (typeof navigator.app !== 'undefined' && typeof navigator.app.addShortcut === 'function') {
+                            navigator.app.addShortcut({
+                                id: 'app-shortcut',
+                                title: '在线娱乐平台',
+                                iconUrl: 'images/icon-192x192.png'
+                            });
+                            console.log('调用小米添加快捷方式API');
+                        }
+                    } catch(e) {
+                        console.error('添加快捷方式API调用失败:', e);
+                    }
                     return;
                 }
                 
+                // 常规PWA安装流程
                 if (deferredPrompt) {
                     console.log('存在安装提示，显示安装对话框');
                     // 显示安装提示
@@ -919,6 +965,9 @@
                         }
                         // 使用后重置延迟提示变量
                         deferredPrompt = null;
+                    }).catch(err => {
+                        console.error('安装提示错误:', err);
+                        showInstallInstructions(isIOS);
                     });
                 } else {
                     console.log('无安装提示，显示手动安装指引');
@@ -928,11 +977,11 @@
             }
         }
 
-        // 在页面加载时和beforeinstallprompt事件监听器单独处理
+        // 更新 beforeinstallprompt 事件处理
         window.addEventListener('beforeinstallprompt', (e) => {
             // 阻止Chrome自动显示安装提示
             e.preventDefault();
-            console.log('捕获到beforeinstallprompt事件');
+            console.log('捕获到beforeinstallprompt事件', e);
             
             // 存储事件供以后使用
             deferredPrompt = e;
@@ -940,17 +989,39 @@
             // 确保按钮可见
             const addToHomeButton = document.getElementById('addToHomeScreen');
             addToHomeButton.style.display = 'block';
+            
+            // 对于支持自动安装的浏览器，可以尝试自动触发安装对话框
+            setTimeout(() => {
+                const userAgent = navigator.userAgent;
+                const isAndroid = /Android/i.test(userAgent);
+                const isChrome = /Chrome/i.test(userAgent) && !/Edge|Edg/i.test(userAgent);
+                const isMobile = /Mobile/i.test(userAgent);
+                
+                if (isAndroid && isChrome && isMobile && deferredPrompt && !installAttempted) {
+                    console.log('尝试自动触发安装提示');
+                    // 注意：有些浏览器可能会阻止自动触发，这取决于用户交互策略
+                    try {
+                        deferredPrompt.prompt();
+                        installAttempted = true;
+                        
+                        deferredPrompt.userChoice.then((choiceResult) => {
+                            console.log('自动安装提示结果:', choiceResult.outcome);
+                            if (choiceResult.outcome !== 'accepted') {
+                                // 如果用户没有接受，我们不做任何处理，保留按钮
+                            } else {
+                                // 用户接受了安装
+                                addToHomeButton.style.display = 'none';
+                            }
+                            deferredPrompt = null;
+                        });
+                    } catch(e) {
+                        console.error('自动触发安装提示失败:', e);
+                    }
+                }
+            }, 3000); // 延迟3秒尝试自动触发，让用户有时间浏览页面
         });
 
-        // 安装完成后的处理
-        window.addEventListener('appinstalled', (evt) => {
-            console.log('应用已成功安装到主屏幕');
-            // 安装完成后隐藏按钮
-            document.getElementById('addToHomeScreen').style.display = 'none';
-            deferredPrompt = null;
-        });
-        
-        // 显示安装说明
+        // 增强 showInstallInstructions 函数
         function showInstallInstructions(isIOS, isMiui = false) {
             const androidInstructions = document.getElementById('androidInstructions');
             const iosInstructions = document.getElementById('iosInstructions');
@@ -969,6 +1040,15 @@
                 iosInstallArrow.style.display = 'block'; // 显示iOS箭头提示
             } else if (isMiui && miuiInstructions) {
                 miuiInstructions.style.display = 'block';
+                
+                // 尝试加载小米截图
+                const miuiScreenshot = document.getElementById('miuiScreenshot');
+                if (miuiScreenshot) {
+                    miuiScreenshot.style.display = 'block';
+                    miuiScreenshot.onerror = function() {
+                        this.style.display = 'none';
+                    };
+                }
             } else {
                 androidInstructions.style.display = 'block';
             }
@@ -977,15 +1057,31 @@
         }
         
         // 关闭安装说明
-        document.getElementById('closeInstall').addEventListener('click', function() {
+        document.getElementById('closeInstall').addEventListener('click', function(e) {
+            e.preventDefault(); // 阻止默认行为
+            e.stopPropagation(); // 阻止事件冒泡
+            console.log('关闭按钮被点击');
             document.getElementById('installInstructions').style.display = 'none';
             document.getElementById('iosInstallArrow').style.display = 'none';
         });
         
         // 确认按钮关闭说明
-        document.getElementById('confirmInstall').addEventListener('click', function() {
+        document.getElementById('confirmInstall').addEventListener('click', function(e) {
+            e.preventDefault(); // 阻止默认行为
+            e.stopPropagation(); // 阻止事件冒泡
+            console.log('确认按钮被点击');
             document.getElementById('installInstructions').style.display = 'none';
             document.getElementById('iosInstallArrow').style.display = 'none';
+        });
+        
+        // 增加点击外部区域关闭功能
+        document.getElementById('installInstructions').addEventListener('click', function(e) {
+            // 仅当点击的是遮罩层而不是内容框时才关闭
+            if (e.target === this) {
+                console.log('点击遮罩层关闭');
+                this.style.display = 'none';
+                document.getElementById('iosInstallArrow').style.display = 'none';
+            }
         });
         
         // 如果支持PWA，注册service worker
